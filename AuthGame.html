@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!-- saved from url=(0262)http://localhost:8080/realms/Playground/login-actions/authenticate?execution=030dbd78-7101-481e-8e84-9941835be99d&client_id=account-console&tab_id=uNQcgUJoKtU&client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0 -->
+<html class="login-pf">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <meta name="robots" content="noindex, nofollow">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Entrar em Keycloak Playground</title>
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/site.webmanifest">
+    <link href="AuthGame_files/patternfly.min.css" rel="stylesheet">
+    <link href="AuthGame_files/patternfly(1).min.css" rel="stylesheet">
+    <link href="AuthGame_files/patternfly-additions.min.css" rel="stylesheet">
+    <link href="AuthGame_files/pficon.css" rel="stylesheet">
+    <link href="AuthGame_files/all.css" rel="stylesheet">
+    <link href="AuthGame_files/base.css" rel="stylesheet">
+    <link href="AuthGame_files/app.css" rel="stylesheet">
+    <link href="AuthGame_files/patternfly(2).min.css" rel="stylesheet">
+    <link href="AuthGame_files/patternfly-additions(1).min.css" rel="stylesheet">
+    <link href="AuthGame_files/login.css" rel="stylesheet">
+    <link href="AuthGame_files/styles.css" rel="stylesheet">
+    <link href="AuthGame_files/footer.css" rel="stylesheet">
+    <script src="AuthGame_files/jquery-3.6.1.min.js" type="text/javascript"></script>
+    <script src="AuthGame_files/jquery.mask.min.js" type="text/javascript"></script>
+    <script src="AuthGame_files/mask.js" type="text/javascript"></script>
+
+    <script>
+
+        window.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const modoSelecionado =
+                    localStorage.getItem(
+                        "passwordMode"
+                    );
+
+                // aplica modo salvo (se existir)
+                if (
+                    modoSelecionado &&
+                    typeof setMode === "function"
+                ) {
+                    setMode(
+                        modoSelecionado
+                    );
+                }
+
+                document
+                    .getElementById(
+                        "kc-form-login"
+                    )
+                    .addEventListener(
+                        "submit",
+                        function (event) {
+
+                            event.preventDefault();
+
+                            const usuarioDigitado =
+                                document
+                                    .getElementById(
+                                        "usuario"
+                                    )
+                                    .value;
+
+                            const senhaDigitada =
+                                document
+                                    .getElementById(
+                                        "password"
+                                    )
+                                    .value;
+
+                            const usuarioSalvo =
+                                localStorage.getItem(
+                                    "usuario"
+                                );
+
+                            const senhaSalva =
+                                localStorage.getItem(
+                                    "senha"
+                                );
+
+                            if (
+                                !usuarioSalvo ||
+                                !senhaSalva
+                            ) {
+
+                                alert(
+                                    "Crie uma conta primeiro"
+                                );
+
+                                return;
+
+                            }
+
+                            if (
+                                usuarioDigitado ===
+                                usuarioSalvo &&
+                                senhaDigitada ===
+                                senhaSalva
+                            ) {
+
+                                alert(
+                                    "Login realizado!"
+                                );
+
+                                // trocar depois
+                                // window.location.href="home.html";
+
+                            }
+                            else {
+
+                                alert(
+                                    "Usuário ou senha incorretos"
+                                );
+
+                            }
+
+                        });
+
+            });
+
+    </script>
+
+    <script> if (typeof history.replaceState === 'function') { history.replaceState({}, "some title", "http://localhost:8080/realms/Playground/login-actions/authenticate?execution=030dbd78-7101-481e-8e84-9941835be99d&client_id=account-console&tab_id=uNQcgUJoKtU&client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0"); }</script>
+    <style>
+        undefined
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com/" crossorigin="use-credentials">
+    <link rel="preconnect" href="https://fonts.gstatic.com/">
+    <link rel="stylesheet" href="AuthGame_files/css2">
+</head>
+
+<body class="">
+    <div class="login-pf-page">
+        <div id="kc-header" class="login-pf-page-header">
+            <div id="kc-header-wrapper" class="">Keycloak Playground</div>
+        </div>
+        <div id="rc-page">
+            <div class="card-pf">
+                <header class="login-pf-header">
+
+                    <div id="kc-username" class="form-group">
+                        <label id="kc-attempted-username" class="text-uppercase"> Usuário Teste </label>
+                        <!--
+                                <a id="reset-login" href="http://localhost:8080/realms/Playground/login-actions/restart?client_id=account-console&amp;tab_id=uNQcgUJoKtU&amp;client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0&amp;skip_logout=false" aria-label="Reiniciar o login">
+                                    <div class="kc-login-tooltip">
+                                        <i class="pficon pficon-arrow fa"></i>
+                                        <span class="kc-tooltip-text">Reiniciar o login</span>
+                                    </div>
+                                </a>
+                            -->
+                    </div>
+                </header>
+                <div id="kc-content">
+                    <div id="kc-content-wrapper">
+
+                        <div id="kc-form">
+                            <div id="kc-form-wrapper">
+                                <form id="kc-form-login" method="post" onsubmit="event.preventDefault();">
+                                    <div class="form-group no-bottom-margin">
+
+                                        <hr>
+
+                                        <div class="select-mode" style="margin-bottom: 10px;">
+                                            <button id="modeToggle" type="button">Modo: Placar</button>
+                                        </div>
+
+                                        <div id="passwordEntropy"
+                                            style="margin-top: 10px; font-weight: bold; color: #555;"></div>
+
+
+                                        <label for="password"
+                                            class="pf-c-form__label pf-c-form__label-text">Senha</label>
+                                        <div class="pf-c-input-group" dir="ltr">
+                                            <input tabindex="2" id="password" class="pf-c-form-control" name="password"
+                                                type="password" autocomplete="on" autofocus="" aria-invalid="">
+                                            <button class="pf-c-button pf-m-control" type="button"
+                                                aria-label="Mostrar palavra-passe" aria-controls="password"
+                                                data-password-toggle="" data-icon-show="fa fa-eye"
+                                                data-icon-hide="fa fa-eye-slash" data-label-show="Mostrar palavra-passe"
+                                                data-label-hide="Esconder palavra-passe">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group login-pf-settings">
+                                        <div id="kc-form-options">
+                                            <div class="">
+                                                <span><a tabindex="5"
+                                                        hrefs="http://localhost:8080/realms/Playground/login-actions/reset-credentials?client_id=account-console&amp;tab_id=uNQcgUJoKtU&amp;client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0">Esqueceu
+                                                        sua senha?</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-bottom:10px;">
+                                        <button type="button" onclick="window.location.href='register.html'"
+                                            class="pf-c-button pf-m-primary pf-m-block btn-lg">
+                                            Criar conta
+                                        </button>
+                                    </div>
+                                    <div id="kc-form-buttons" class="form-group">
+                                        <input tabindex="4" class="pf-c-button pf-m-primary pf-m-block btn-lg"
+                                            name="login" id="kc-login" type="submit" value="Entrar">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <script type="module" src="AuthGame_files/entropy.js"></script>
+                        <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
+                        <script type="module" src="AuthGame_files/zxcvbn.js"></script>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
