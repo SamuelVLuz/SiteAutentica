@@ -1,235 +1,116 @@
 <!DOCTYPE html>
-<!-- saved from url=(0262)http://localhost:8080/realms/Playground/login-actions/authenticate?execution=030dbd78-7101-481e-8e84-9941835be99d&client_id=account-console&tab_id=uNQcgUJoKtU&client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0 -->
-<html class="login-pf">
+<html class="login-pf" lang="pt-BR">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
+    <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow">
-
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Entrar em Keycloak Playground</title>
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32"
-        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16"
-        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/favicon-16x16.png">
-    <link rel="manifest" href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/site.webmanifest">
+    <title>Portal de Notas - Entrar</title>
     <link href="AuthGame_files/patternfly.min.css" rel="stylesheet">
     <link href="AuthGame_files/patternfly(1).min.css" rel="stylesheet">
     <link href="AuthGame_files/patternfly-additions.min.css" rel="stylesheet">
     <link href="AuthGame_files/pficon.css" rel="stylesheet">
-    <link href="AuthGame_files/all.css" rel="stylesheet">
-    <link href="AuthGame_files/base.css" rel="stylesheet">
-    <link href="AuthGame_files/app.css" rel="stylesheet">
-    <link href="AuthGame_files/patternfly(2).min.css" rel="stylesheet">
-    <link href="AuthGame_files/patternfly-additions(1).min.css" rel="stylesheet">
     <link href="AuthGame_files/login.css" rel="stylesheet">
-    <link href="AuthGame_files/styles.css" rel="stylesheet">
+    <link href="AuthGame_files/styles.css?v=layout-20260830" rel="stylesheet">
     <link href="AuthGame_files/footer.css" rel="stylesheet">
-    <script src="AuthGame_files/jquery-3.6.1.min.js" type="text/javascript"></script>
-    <script src="AuthGame_files/jquery.mask.min.js" type="text/javascript"></script>
-    <script src="AuthGame_files/mask.js" type="text/javascript"></script>
-
     <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("kc-form-login").addEventListener("submit", function (event) {
+                event.preventDefault();
 
-        window.addEventListener(
-            "DOMContentLoaded",
-            function () {
+                const usuarioDigitado = document.getElementById("usuario").value;
+                const senhaDigitada = document.getElementById("password").value;
+                const usuarioSalvo = localStorage.getItem("usuario");
+                const senhaSalva = localStorage.getItem("senha");
 
-                const modoSelecionado =
-                    localStorage.getItem(
-                        "passwordMode"
-                    );
-
-                // aplica modo salvo (se existir)
-                if (
-                    modoSelecionado &&
-                    typeof setMode === "function"
-                ) {
-                    setMode(
-                        modoSelecionado
-                    );
+                if (!usuarioSalvo || !senhaSalva) {
+                    alert("Ainda não há uma conta criada neste navegador.");
+                    return;
                 }
 
-                document
-                    .getElementById(
-                        "kc-form-login"
-                    )
-                    .addEventListener(
-                        "submit",
-                        function (event) {
-
-                            event.preventDefault();
-
-                            const usuarioDigitado =
-                                document
-                                    .getElementById(
-                                        "usuario"
-                                    )
-                                    .value;
-
-                            const senhaDigitada =
-                                document
-                                    .getElementById(
-                                        "password"
-                                    )
-                                    .value;
-
-                            const usuarioSalvo =
-                                localStorage.getItem(
-                                    "usuario"
-                                );
-
-                            const senhaSalva =
-                                localStorage.getItem(
-                                    "senha"
-                                );
-
-                            if (
-                                !usuarioSalvo ||
-                                !senhaSalva
-                            ) {
-
-                                alert(
-                                    "Crie uma conta primeiro"
-                                );
-
-                                return;
-
-                            }
-
-                            if (
-                                usuarioDigitado ===
-                                usuarioSalvo &&
-                                senhaDigitada ===
-                                senhaSalva
-                            ) {
-
-                                alert(
-                                    "Login realizado!"
-                                );
-
-                                // trocar depois
-                                // window.location.href="home.html";
-
-                            }
-                            else {
-
-                                alert(
-                                    "Usuário ou senha incorretos"
-                                );
-
-                            }
-
-                        });
-
+                if (usuarioDigitado === usuarioSalvo && senhaDigitada === senhaSalva) {
+                    alert("Login realizado! Bem-vindo ao portal.");
+                } else {
+                    alert("Usuário ou senha incorretos.");
+                }
             });
-
+        });
     </script>
-
-    <script> if (typeof history.replaceState === 'function') { history.replaceState({}, "some title", "http://localhost:8080/realms/Playground/login-actions/authenticate?execution=030dbd78-7101-481e-8e84-9941835be99d&client_id=account-console&tab_id=uNQcgUJoKtU&client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0"); }</script>
-    <style>
-        undefined
-    </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com/" crossorigin="use-credentials">
-    <link rel="preconnect" href="https://fonts.gstatic.com/">
-    <link rel="stylesheet" href="AuthGame_files/css2">
 </head>
 
-<body class="">
-    <div class="login-pf-page">
-        <div id="kc-header" class="login-pf-page-header">
-            <div id="kc-header-wrapper" class="">Keycloak Playground</div>
-        </div>
-        <div id="rc-page">
-            <div class="card-pf">
-                <header class="login-pf-header">
+<body>
+    <main class="login-pf-page auth-page auth-page--login">
+        <header id="kc-header" class="login-pf-page-header">
+            <a id="kc-header-wrapper" href="AuthGame.html" aria-label="Portal de Notas">Portal de Notas</a>
+        </header>
 
-                    <div id="kc-username" class="form-group">
-                        <label id="kc-attempted-username" class="text-uppercase"> Usuário Teste </label>
-                        <!--
-                                <a id="reset-login" href="http://localhost:8080/realms/Playground/login-actions/restart?client_id=account-console&amp;tab_id=uNQcgUJoKtU&amp;client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0&amp;skip_logout=false" aria-label="Reiniciar o login">
-                                    <div class="kc-login-tooltip">
-                                        <i class="pficon pficon-arrow fa"></i>
-                                        <span class="kc-tooltip-text">Reiniciar o login</span>
-                                    </div>
-                                </a>
-                            -->
-                    </div>
-                </header>
-                <div id="kc-content">
-                    <div id="kc-content-wrapper">
+        <section id="rc-page" aria-labelledby="login-title">
+            <div class="auth-shell auth-shell--split">
+                <div class="auth-panel auth-panel--form">
+                    <header class="login-pf-header">
+                        <p class="auth-eyebrow">Boas-vindas de volta</p>
+                        <h1 id="login-title">Entrar</h1>
+                        <p class="auth-card__intro">Use seu acesso acadêmico para consultar suas notas.</p>
+                    </header>
 
-                        <div id="kc-form">
-                            <div id="kc-form-wrapper">
-                                <form id="kc-form-login" method="post" onsubmit="event.preventDefault();">
-                                    <div class="form-group no-bottom-margin">
-
-                                        <hr>
-
-                                        <div class="select-mode" style="margin-bottom: 10px;">
-                                            <button id="modeToggle" type="button">Modo: Placar</button>
-                                        </div>
-
-                                        <div id="passwordEntropy"
-                                            style="margin-top: 10px; font-weight: bold; color: #555;"></div>
-
-
-                                        <label for="password"
-                                            class="pf-c-form__label pf-c-form__label-text">Senha</label>
-                                        <div class="pf-c-input-group" dir="ltr">
-                                            <input tabindex="2" id="password" class="pf-c-form-control" name="password"
-                                                type="password" autocomplete="on" autofocus="" aria-invalid="">
-                                            <button class="pf-c-button pf-m-control" type="button"
-                                                aria-label="Mostrar palavra-passe" aria-controls="password"
-                                                data-password-toggle="" data-icon-show="fa fa-eye"
-                                                data-icon-hide="fa fa-eye-slash" data-label-show="Mostrar palavra-passe"
-                                                data-label-hide="Esconder palavra-passe">
-                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group login-pf-settings">
-                                        <div id="kc-form-options">
-                                            <div class="">
-                                                <span><a tabindex="5"
-                                                        hrefs="http://localhost:8080/realms/Playground/login-actions/reset-credentials?client_id=account-console&amp;tab_id=uNQcgUJoKtU&amp;client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0">Esqueceu
-                                                        sua senha?</a></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div style="margin-bottom:10px;">
-                                        <button type="button" onclick="window.location.href='register.html'"
-                                            class="pf-c-button pf-m-primary pf-m-block btn-lg">
-                                            Criar conta
-                                        </button>
-                                    </div>
-                                    <div id="kc-form-buttons" class="form-group">
-                                        <input tabindex="4" class="pf-c-button pf-m-primary pf-m-block btn-lg"
-                                            name="login" id="kc-login" type="submit" value="Entrar">
-                                    </div>
-                                </form>
+                    <div id="kc-content">
+                        <form id="kc-form-login" method="post">
+                            <div class="form-group">
+                                <label for="usuario" class="pf-c-form__label pf-c-form__label-text">Usuário acadêmico</label>
+                                <input id="usuario" placeholder="Digite seu usuário" class="pf-c-form-control" name="usuario"
+                                    autocomplete="username" required>
                             </div>
-                        </div>
-                        <script type="module" src="AuthGame_files/entropy.js"></script>
-                        <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
-                        <script type="module" src="AuthGame_files/zxcvbn.js"></script>
 
+                            <div class="form-group no-bottom-margin">
+                                <div class="field-label-row">
+                                    <label for="password" class="pf-c-form__label pf-c-form__label-text">Senha</label>
+                                    <a tabindex="5" href="#">Esqueceu a senha?</a>
+                                </div>
+                                <div class="pf-c-input-group" dir="ltr">
+                                    <input tabindex="2" id="password" class="pf-c-form-control" name="password" type="password"
+                                        autocomplete="current-password" aria-invalid="false" required>
+                                    <button class="pf-c-button pf-m-control" type="button" aria-label="Mostrar senha"
+                                        aria-controls="password" data-password-toggle data-label-show="Mostrar senha"
+                                        data-label-hide="Ocultar senha">Ver</button>
+                                </div>
 
+                                <div class="select-mode">
+                                    <button id="modeToggle" type="button">Modo: Comparação</button>
+                                </div>
+                                <div id="passwordEntropy" aria-live="polite"></div>
+                            </div>
 
+                            <div class="auth-actions">
+                                <input tabindex="4" class="pf-c-button pf-m-primary pf-m-block btn-lg" name="login" id="kc-login"
+                                    type="submit" value="Entrar">
+                            </div>
+                        </form>
 
+                        <footer class="auth-card__footer">
+                            <span>Primeira vez por aqui?</span>
+                            <a href="register.html">Criar uma conta</a>
+                        </footer>
                     </div>
                 </div>
+
+                <aside class="auth-panel auth-panel--welcome" aria-label="Apresentação do Portal de Notas">
+                    <div class="auth-welcome__content">
+                        <span class="auth-welcome__badge">PORTAL DE NOTAS</span>
+                        <h2>Seu progresso, em um só lugar.</h2>
+                        <p>Acompanhe seu desempenho acadêmico com praticidade e segurança.</p>
+                    </div>
+                    <div class="auth-welcome__footer">
+                        <span>Ainda não possui acesso?</span>
+                        <a href="register.html">Criar conta</a>
+                    </div>
+                </aside>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
-
+    <script type="module" src="AuthGame_files/entropy.js"></script>
+    <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
+    <script type="module" src="AuthGame_files/zxcvbn.js"></script>
 </body>
 
 </html>

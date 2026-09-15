@@ -2,113 +2,141 @@ document.addEventListener('DOMContentLoaded', function () {
   const passwordField = document.getElementById('password');
   const passwordEntropy = document.getElementById('passwordEntropy');
   const modeToggleButton = document.getElementById('modeToggle');
-
-  const modes = ['score', 'stars', 'time'];
-  const entropyList = [0.5, 0.8, 1, 1.2, 1.5, 1.8, 2, 2.3, 2.5, 2.8,
-  3, 3.3, 3.5, 3.8, 4, 4.3, 4.5, 4.8, 5,
-  5.5, 6, 6.5, 7, 7.5, 8,
-  9, 10, 11, 12, 13, 14, 15,
-  16, 17, 18, 19, 20,
-  21, 22, 23, 24, 25,
-  26, 27, 28, 29, 30,
-  32, 34, 36, 38, 40];
-
+  const PASSWORD_LIST_FILE = 'AuthGame_files/rockyou-75.txt';
+  const FALLBACK_ENTROPIES = [13.2, 16.1, 18.8, 21.4, 24.0, 27.1, 30.5, 34.0, 38.2, 42.7, 47.6, 53.1, 59.4, 66.0, 74.2, 83.5, 94.1, 106.0];
+  const modes = ['score', 'bar', 'stars', 'time'];
+  const modeLabels = { score: 'Comparação', bar: 'Barra', stars: 'Estrelas', time: 'Tempo' };
+  const listState = { ready: false, values: FALLBACK_ENTROPIES.slice().sort((a, b) => a - b) };
   let currentModeIndex = 0;
 
-  function getModeLabel(mode) {
-    switch (mode) {
-      case 'score': return 'Placar';
-      case 'stars': return 'Estrelas';
-      case 'time': return 'Tempo';
-      default: return '';
+  loadReferenceList();
+  restoreSavedMode();
+  renderModeButton();
+
+  modeToggleButton?.addEventListener('click', () => {
+    currentModeIndex = (currentModeIndex + 1) % modes.length;
+    localStorage.setItem('passwordMode', modes[currentModeIndex]);
+    renderModeButton();
+    updateFeedback(passwordField.value);
+  });
+
+  passwordField?.addEventListener('input', () => updateFeedback(passwordField.value));
+  if (passwordField) updateFeedback(passwordField.value);
+
+  async function loadReferenceList() {
+    try {
+      const response = await fetch(PASSWORD_LIST_FILE);
+      if (!response.ok) throw new Error('Lista indisponível');
+      const values = (await response.text()).split(/\r?\n/).map(item => item.trim()).filter(Boolean).map(calculateEntropy).sort((a, b) => a - b);
+      if (values.length) listState.values = values;
+    } catch (error) {
+      // A lista de referência é um aprimoramento visual; a avaliação continua com valores locais.
+    } finally {
+      listState.ready = true;
+      if (passwordField) updateFeedback(passwordField.value);
     }
   }
 
-  // Traduz expressões de tempo para português
-  function traduzirTempo(tempo) {
-    return tempo
-      .replace('less than a second', 'menos de um segundo')
-      .replace('seconds', 'segundos')
-      .replace('second', 'segundo')
-      .replace('minutes', 'minutos')
-      .replace('minute', 'minuto')
-      .replace('hours', 'horas')
-      .replace('hour', 'hora')
-      .replace('days', 'dias')
-      .replace('day', 'dia')
-      .replace('months', 'meses')
-      .replace('month', 'mês')
-      .replace('years', 'anos')
-      .replace('year', 'ano')
-      .replace('centuries', 'séculos')
-      .replace('century', 'século');
+  function restoreSavedMode() {
+    const savedIndex = modes.indexOf(localStorage.getItem('passwordMode'));
+    currentModeIndex = savedIndex >= 0 ? savedIndex : 0;
   }
 
-  // Atualiza feedback com base no modo
-  async function updateFeedback(password) {
-    if (!password || !passwordEntropy) {
-      passwordEntropy.textContent = '';
+  function renderModeButton() {
+    if (modeToggleButton) modeToggleButton.textContent = `Modo: ${modeLabels[modes[currentModeIndex]]}`;
+  }
+
+  function updateFeedback(password) {
+    if (!passwordEntropy) return;
+    if (!password) {
+      passwordEntropy.innerHTML = '';
       return;
     }
-
-    const result = zxcvbn(password);
-    const mode = modes[currentModeIndex];
-
-    switch (mode) {
-      case 'score':
-        const entropy = Number(result.guesses_log10);
-        const percentileResult = getPercentile(entropy);
-        entropyList.push(entropy);
-        passwordEntropy.textContent =
-          percentileResult?.percentile !== undefined
-            ? `Você está no top ${percentileResult.percentile}%`
-            : 'Erro ao calcular percentile.';
-        break;
-
-      case 'stars':
-        const stars = result.score + 1;
-        passwordEntropy.innerHTML = `
-          <span style="font-size: 24px;">
-          <span style="color: gold;">${'★'.repeat(stars)}</span><span style="color: lightgray;">${'☆'.repeat(5 - stars)}</span>
-          </span>
-        `;    
-        break;
-
-      case 'time':
-        const tempo = result.crack_times_display.offline_slow_hashing_1e4_per_second;
-        passwordEntropy.textContent = `Tempo para descobrir a senha: ${traduzirTempo(tempo)}`;
-        break;
+    const entropy = calculateEntropy(password);
+    const strength = getStrength(entropy);
+    switch (modes[currentModeIndex]) {
+      case 'score': renderComparison(entropy, strength); break;
+      case 'bar': renderStrengthBar(strength); break;
+      case 'stars': renderStars(strength); break;
+      case 'time': renderCrackTime(password); break;
     }
+  }
+
+  function calculateEntropy(password) {
+    const range = getCharacterRange(password);
+    return password.length && range ? password.length * Math.log2(range) : 0;
+  }
+
+  function getCharacterRange(password) {
+    let range = 0;
+    if (/[a-z]/.test(password)) range += 26;
+    if (/[A-Z]/.test(password)) range += 26;
+    if (/[0-9]/.test(password)) range += 10;
+    if (/[^a-zA-Z0-9]/.test(password)) range += 33;
+    return range;
   }
 
   function getPercentile(entropy) {
-  if (!entropyList.length) {
-    return { percentile: 0 };
+    let start = 0;
+    let end = listState.values.length;
+    while (start < end) {
+      const middle = Math.floor((start + end) / 2);
+      if (listState.values[middle] < entropy) start = middle + 1;
+      else end = middle;
+    }
+    return Math.round((start / listState.values.length) * 100);
   }
 
-  const countBelow = entropyList.filter(e => e < entropy).length;
-  const total = entropyList.length;
-
-  const percentile = 100 - ((countBelow / total) * 100);
-
-  return { percentile: percentile.toFixed(2) };
-}
-
-  if (modeToggleButton) {
-    modeToggleButton.addEventListener('click', () => {
-      currentModeIndex = (currentModeIndex + 1) % modes.length;
-      const mode = modes[currentModeIndex];
-      modeToggleButton.textContent = `Modo: ${getModeLabel(mode)}`;
-      updateFeedback(passwordField.value);
-    });
-
-    // Define modo inicial no botão
-    modeToggleButton.textContent = `Modo: ${getModeLabel(modes[currentModeIndex])}`;
+  function getStrength(entropy) {
+    if (entropy < 28) return { label: 'Fraca', detail: 'um palpite bem treinado pode pegá-la.', score: 1, percent: 17, className: 'is-weak' };
+    if (entropy < 36) return { label: 'Básica', detail: 'já é alguma coisa, mas ainda dá para caprichar.', score: 2, percent: 34, className: 'is-basic' };
+    if (entropy < 60) return { label: 'Boa', detail: 'está no caminho certo.', score: 3, percent: 51, className: 'is-good' };
+    if (entropy < 80) return { label: 'Forte', detail: 'essa já dá trabalho de verdade.', score: 4, percent: 68, className: 'is-strong' };
+    if (entropy < 105) return { label: 'Excelente', detail: 'uma senha de respeito.', score: 5, percent: 84, className: 'is-excellent' };
+    return { label: 'Lendária', detail: 'nível chefe final: guarde-a em segurança.', score: 6, percent: 100, className: 'is-legendary' };
   }
 
-  if (passwordField) {
-    passwordField.addEventListener('input', () => {
-      updateFeedback(passwordField.value);
-    });
+  function renderComparison(entropy, strength) {
+    const percentile = getPercentile(entropy);
+    const note = percentile >= 90 ? 'Ela está bem acima das senhas comuns. Belo trabalho.'
+      : percentile >= 70 ? 'Ela passou pela maior parte da lista — ótimo sinal.'
+      : percentile >= 40 ? 'Ela está no meio do caminho; mais alguns detalhes ajudam bastante.'
+      : 'Ela ainda parece familiar demais para uma lista de senhas comuns.';
+    passwordEntropy.innerHTML = `<div class="password-meter"><div class="password-meter__header"><span>Comparação com senhas conhecidas</span><strong>${percentile}%</strong></div><div class="password-meter__track" aria-hidden="true"><span class="password-meter__fill ${strength.className}" style="width: ${Math.max(percentile, 4)}%"></span></div><p>${note}</p></div>`;
+  }
+
+  function renderStrengthBar(strength) {
+    passwordEntropy.innerHTML = `<div class="password-meter"><div class="password-meter__header"><span>Segurança da senha</span><strong>${strength.label}</strong></div><div class="password-meter__track" aria-hidden="true"><span class="password-meter__fill ${strength.className}" style="width: ${strength.percent}%"></span></div><p>${strength.detail}</p></div>`;
+  }
+
+  function renderStars(strength) {
+    const stars = Array.from({ length: 6 }, (_, index) => {
+      const special = index === 5;
+      const filled = index < strength.score;
+      return `<span class="${filled ? 'is-filled' : ''} ${special ? 'is-legendary-star' : ''}">${special ? '✦' : '★'}</span>`;
+    }).join('');
+    passwordEntropy.innerHTML = `<div class="password-stars" aria-label="${strength.score} de 6 estrelas"><div>${stars}</div><p><strong>${strength.label}</strong>: ${strength.detail}</p></div>`;
+  }
+
+  function renderCrackTime(password) {
+    const result = typeof zxcvbn === 'function' ? zxcvbn(password) : null;
+    const displayTime = result?.crack_times_display.offline_slow_hashing_1e4_per_second;
+    const message = displayTime ? getCrackTimeMessage(displayTime) : 'Ainda estamos calculando esse enigma.';
+    passwordEntropy.innerHTML = `<div class="password-meter"><div class="password-meter__header"><span>Tempo estimado para descobrir</span></div><p>${message}</p></div>`;
+  }
+
+  function getCrackTimeMessage(time) {
+    if (time.includes('centur')) return 'Séculos — levariam gerações inteiras para descobrir essa. Impressionante.';
+    const translated = translateTime(time);
+    if (time.includes('year')) return `${translated}. Dá para envelhecer com tranquilidade esperando.`;
+    if (time.includes('month')) return `${translated}. Tempo suficiente para muita coisa mudar.`;
+    if (time.includes('day')) return `${translated}. Já não é uma senha para subestimar.`;
+    if (time.includes('hour')) return `${translated}. Um café não vai ser suficiente para quebrá-la.`;
+    if (time.includes('minute')) return `${translated}. Vamos reforçar essa defesa.`;
+    return `${translated}. Essa foi rápida demais — tente adicionar mais variedade.`;
+  }
+
+  function translateTime(time) {
+    return time.replace('less than a second', 'menos de um segundo').replace('seconds', 'segundos').replace('second', 'segundo').replace('minutes', 'minutos').replace('minute', 'minuto').replace('hours', 'horas').replace('hour', 'hora').replace('days', 'dias').replace('day', 'dia').replace('months', 'meses').replace('month', 'mês').replace('years', 'anos').replace('year', 'ano');
   }
 });

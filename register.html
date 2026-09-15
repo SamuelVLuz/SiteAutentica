@@ -1,180 +1,90 @@
 <!DOCTYPE html>
-<!-- saved from url=(0262)http://localhost:8080/realms/Playground/login-actions/authenticate?execution=030dbd78-7101-481e-8e84-9941835be99d&client_id=account-console&tab_id=uNQcgUJoKtU&client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0 -->
-<html class="login-pf">
+<html class="login-pf" lang="pt-BR">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
+    <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow">
-
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Cadastrar Usuário</title>
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32"
-        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16"
-        href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/favicon-16x16.png">
-    <link rel="manifest" href="http://localhost:8080/resources/tkzk4/login/registrocivil/img/favicon/site.webmanifest">
+    <title>Portal de Notas - Criar conta</title>
     <link href="AuthGame_files/patternfly.min.css" rel="stylesheet">
     <link href="AuthGame_files/patternfly(1).min.css" rel="stylesheet">
     <link href="AuthGame_files/patternfly-additions.min.css" rel="stylesheet">
     <link href="AuthGame_files/pficon.css" rel="stylesheet">
-    <link href="AuthGame_files/all.css" rel="stylesheet">
-    <link href="AuthGame_files/base.css" rel="stylesheet">
-    <link href="AuthGame_files/app.css" rel="stylesheet">
-    <link href="AuthGame_files/patternfly(2).min.css" rel="stylesheet">
-    <link href="AuthGame_files/patternfly-additions(1).min.css" rel="stylesheet">
     <link href="AuthGame_files/login.css" rel="stylesheet">
-    <link href="AuthGame_files/styles.css" rel="stylesheet">
+    <link href="AuthGame_files/styles.css?v=layout-20260830" rel="stylesheet">
     <link href="AuthGame_files/footer.css" rel="stylesheet">
-    <script src="AuthGame_files/jquery-3.6.1.min.js" type="text/javascript"></script>
-    <script src="AuthGame_files/jquery.mask.min.js" type="text/javascript"></script>
-    <script src="AuthGame_files/mask.js" type="text/javascript"></script>
+</head>
 
-<body class="">
-    <div class="login-pf-page">
-        <div id="kc-header" class="login-pf-page-header">
-            <div id="kc-header-wrapper" class="">Cadastro</div>
-        </div>
-        <div id="rc-page">
-            <div class="card-pf">
+<body>
+    <main class="login-pf-page auth-page auth-page--register">
+        <header id="kc-header" class="login-pf-page-header">
+            <a id="kc-header-wrapper" href="AuthGame.html" aria-label="Portal de Notas">Portal de Notas</a>
+        </header>
+
+        <section id="rc-page" aria-labelledby="register-title">
+            <div class="auth-shell auth-shell--single">
                 <header class="login-pf-header">
-
-                    <div id="kc-username" class="form-group">
-                        <label id="kc-attempted-username" class="text-uppercase">Crie seu usuário</label>
-                        <!--
-                                <a id="reset-login" href="http://localhost:8080/realms/Playground/login-actions/restart?client_id=account-console&amp;tab_id=uNQcgUJoKtU&amp;client_data=eyJydSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvUGxheWdyb3VuZC9hY2NvdW50IiwicnQiOiJjb2RlIn0&amp;skip_logout=false" aria-label="Reiniciar o login">
-                                    <div class="kc-login-tooltip">
-                                        <i class="pficon pficon-arrow fa"></i>
-                                        <span class="kc-tooltip-text">Reiniciar o login</span>
-                                    </div>
-                                </a>
-                            -->
-                    </div>
+                    <p class="auth-eyebrow">Portal de Notas</p>
+                    <h1 id="register-title">Criar conta</h1>
+                    <p class="auth-card__intro">Escolha suas credenciais para acessar o Portal de Notas.</p>
                 </header>
+
                 <div id="kc-content">
-                    <div id="kc-content-wrapper">
-
-
-                        <label for="usuario" class="pf-c-form__label pf-c-form__label-text">Usuário</label>
-                        <input id="usuario" placeholder="Usuário" class="pf-c-form-control" name="usuario">
-
-                        <br><br>
-
-                        <div class="select-mode" style="margin-bottom: 10px;">
-                            <button id="modeToggle" type="button">Modo: Placar</button>
+                    <form id="kc-register-form">
+                        <div class="form-group">
+                            <label for="usuario" class="pf-c-form__label pf-c-form__label-text">Usuário acadêmico</label>
+                            <input id="usuario" placeholder="Escolha seu usuário" class="pf-c-form-control" name="usuario"
+                                autocomplete="username" required>
                         </div>
 
+                        <div class="form-group no-bottom-margin">
+                            <label for="password" class="pf-c-form__label pf-c-form__label-text">Crie uma senha</label>
+                            <div class="pf-c-input-group" dir="ltr">
+                                <input id="password" class="pf-c-form-control" name="password" type="password"
+                                    autocomplete="new-password" aria-invalid="false" required>
+                                <button class="pf-c-button pf-m-control" type="button" aria-label="Mostrar senha"
+                                    aria-controls="password" data-password-toggle data-label-show="Mostrar senha"
+                                    data-label-hide="Ocultar senha">Ver</button>
+                            </div>
 
-                        <div id="passwordEntropy" style="margin-top: 10px; font-weight: bold; color: #555;"></div>
-
-                        <br>
-
-                        <label for="password" class="pf-c-form__label pf-c-form__label-text">Senha</label>
-                        <div class="pf-c-input-group" dir="ltr">
-                            <input tabindex="2" id="password" class="pf-c-form-control" name="password" type="password"
-                                autocomplete="on" autofocus="" aria-invalid="">
+                            <div class="select-mode">
+                                <button id="modeToggle" type="button">Modo: Comparação</button>
+                            </div>
+                            <div id="passwordEntropy" aria-live="polite"></div>
                         </div>
 
-                        <div id="passwordFeedback" style="
-margin-top:10px;
-font-weight:bold;
-">
+                        <div class="auth-actions">
+                            <button type="submit" class="pf-c-button pf-m-primary pf-m-block btn-lg">Criar conta</button>
                         </div>
+                    </form>
 
-                        <br>
+                    <footer class="auth-card__footer">
+                        <span>Já tem uma conta?</span>
+                        <a href="AuthGame.html">Entrar</a>
+                    </footer>
+                </div>
+            </div>
+        </section>
+    </main>
 
-                        <button onclick="cadastrar()" class="pf-c-button pf-m-primary pf-m-block btn-lg">
+    <script>
+        document.getElementById("kc-register-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const usuario = document.getElementById("usuario").value;
+            const senha = document.getElementById("password").value;
 
-                            Cadastrar
+            if (!usuario || !senha) return;
 
-                        </button>
-
-                        <script>
-
-                            const senha =
-                                document
-                                    .getElementById(
-                                        "password"
-                                    );
-
-                            const modo =
-                                document
-                                    .getElementById(
-                                        "modeToggle"
-                                    );
-
-                            const feedback =
-                                document
-                                    .getElementById(
-                                        "passwordFeedback"
-                                    );
-
-                            function cadastrar() {
-
-                                const usuario =
-                                    document
-                                        .getElementById(
-                                            "usuario"
-                                        )
-                                        .value;
-
-                                const senha =
-                                    document
-                                        .getElementById(
-                                            "password"
-                                        )
-                                        .value;
-
-                                if (
-                                    !usuario ||
-                                    !senha
-                                ) {
-
-                                    alert(
-                                        "Preencha tudo"
-                                    );
-
-                                    return;
-
-                                }
-
-                                localStorage.setItem(
-                                    "usuario",
-                                    usuario
-                                );
-
-                                localStorage.setItem(
-                                    "senha",
-                                    senha
-                                );
-
-                                localStorage.setItem(
-                                    "passwordMode",
-                                    modo.value
-                                );
-
-                                alert(
-                                    "Conta criada!"
-                                );
-
-                                window.location.href =
-                                    "AuthGame.html";
-
-                            }
-
-                            atualizar();
-
-                        </script>
-
-
-                    </div>
-                    <script type="module" src="AuthGame_files/entropy.js"></script>
-                    <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
-                    <script type="module" src="AuthGame_files/zxcvbn.js"></script>
-
+            localStorage.setItem("usuario", usuario);
+            localStorage.setItem("senha", senha);
+            localStorage.setItem("passwordMode", localStorage.getItem("passwordMode") || "score");
+            alert("Conta criada! Agora é só entrar.");
+            window.location.href = "AuthGame.html";
+        });
+    </script>
+    <script type="module" src="AuthGame_files/entropy.js"></script>
+    <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
+    <script type="module" src="AuthGame_files/zxcvbn.js"></script>
 </body>
 
 </html>
