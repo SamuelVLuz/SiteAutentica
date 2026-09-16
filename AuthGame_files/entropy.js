@@ -2,26 +2,66 @@ document.addEventListener('DOMContentLoaded', function () {
   const passwordField = document.getElementById('password');
   const passwordEntropy = document.getElementById('passwordEntropy');
   const modeToggleButton = document.getElementById('modeToggle');
+  const modeControl = modeToggleButton?.closest('.select-mode');
   const PASSWORD_LIST_FILE = 'AuthGame_files/rockyou-75.txt';
   const FALLBACK_ENTROPIES = [13.2, 16.1, 18.8, 21.4, 24.0, 27.1, 30.5, 34.0, 38.2, 42.7, 47.6, 53.1, 59.4, 66.0, 74.2, 83.5, 94.1, 106.0];
   const modes = ['score', 'bar', 'stars', 'time'];
   const modeLabels = { score: 'Comparação', bar: 'Barra', stars: 'Estrelas', time: 'Tempo' };
+  const modeAliases = {
+    comparacao: 'score', comparação: 'score', score: 'score',
+    barra: 'bar', bar: 'bar',
+    estrelas: 'stars', stars: 'stars',
+    tempo: 'time', time: 'time',
+    todos: 'all', all: 'all', atual: 'all',
+    nenhum: 'none', none: 'none', sem: 'none'
+  };
+  const rawMode = new URLSearchParams(window.location.search).get('modo');
+  const evaluationMode = rawMode ? (modeAliases[rawMode.toLowerCase()] || 'none') : 'none';
   const listState = { ready: false, values: FALLBACK_ENTROPIES.slice().sort((a, b) => a - b) };
-  let currentModeIndex = 0;
+  let currentModeIndex = getSavedModeIndex();
 
-  loadReferenceList();
-  restoreSavedMode();
-  renderModeButton();
+  configureTestMode();
+  preserveModeBetweenPages();
 
-  modeToggleButton?.addEventListener('click', () => {
-    currentModeIndex = (currentModeIndex + 1) % modes.length;
-    localStorage.setItem('passwordMode', modes[currentModeIndex]);
-    renderModeButton();
-    updateFeedback(passwordField.value);
-  });
-
+  if (evaluationMode === 'score' || evaluationMode === 'all') loadReferenceList();
   passwordField?.addEventListener('input', () => updateFeedback(passwordField.value));
   if (passwordField) updateFeedback(passwordField.value);
+
+  function configureTestMode() {
+    if (modeControl) modeControl.hidden = evaluationMode !== 'all';
+    renderModeButton();
+
+    modeToggleButton?.addEventListener('click', () => {
+      if (evaluationMode !== 'all') return;
+      currentModeIndex = (currentModeIndex + 1) % modes.length;
+      localStorage.setItem('passwordMode', modes[currentModeIndex]);
+      renderModeButton();
+      updateFeedback(passwordField.value);
+    });
+  }
+
+  function getSavedModeIndex() {
+    const savedIndex = modes.indexOf(localStorage.getItem('passwordMode'));
+    return savedIndex >= 0 ? savedIndex : 0;
+  }
+
+  function getActiveMode() {
+    return evaluationMode === 'all' ? modes[currentModeIndex] : evaluationMode;
+  }
+
+  function renderModeButton() {
+    if (modeToggleButton) modeToggleButton.textContent = `Modo: ${modeLabels[modes[currentModeIndex]]}`;
+  }
+
+  function preserveModeBetweenPages() {
+    window.getAuthModeUrl = function (page) {
+      return rawMode ? `${page}?modo=${encodeURIComponent(rawMode)}` : page;
+    };
+
+    document.querySelectorAll('a[href="AuthGame.html"], a[href="register.html"]').forEach(link => {
+      link.href = window.getAuthModeUrl(link.getAttribute('href'));
+    });
+  }
 
   async function loadReferenceList() {
     try {
@@ -37,24 +77,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function restoreSavedMode() {
-    const savedIndex = modes.indexOf(localStorage.getItem('passwordMode'));
-    currentModeIndex = savedIndex >= 0 ? savedIndex : 0;
-  }
-
-  function renderModeButton() {
-    if (modeToggleButton) modeToggleButton.textContent = `Modo: ${modeLabels[modes[currentModeIndex]]}`;
-  }
-
   function updateFeedback(password) {
     if (!passwordEntropy) return;
-    if (!password) {
+    const activeMode = getActiveMode();
+    if (activeMode === 'none' || !password) {
       passwordEntropy.innerHTML = '';
       return;
     }
+
     const entropy = calculateEntropy(password);
     const strength = getStrength(entropy);
-    switch (modes[currentModeIndex]) {
+    switch (activeMode) {
       case 'score': renderComparison(entropy, strength); break;
       case 'bar': renderStrengthBar(strength); break;
       case 'stars': renderStars(strength); break;
@@ -110,12 +143,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function renderStars(strength) {
-    const stars = Array.from({ length: 6 }, (_, index) => {
-      const special = index === 5;
-      const filled = index < strength.score;
-      return `<span class="${filled ? 'is-filled' : ''} ${special ? 'is-legendary-star' : ''}">${special ? '✦' : '★'}</span>`;
-    }).join('');
-    passwordEntropy.innerHTML = `<div class="password-stars" aria-label="${strength.score} de 6 estrelas"><div>${stars}</div><p><strong>${strength.label}</strong>: ${strength.detail}</p></div>`;
+    const regularStars = Array.from({ length: 5 }, (_, index) => (
+      `<span class="${index < strength.score ? 'is-filled' : ''}">★</span>`
+    )).join('');
+    const legendaryStar = strength.score === 6
+      ? '<span class="is-filled is-legendary-star">✦</span>'
+      : '';
+    const ariaLabel = strength.score === 6 ? '6 estrelas, nível Lendária' : `${strength.score} de 5 estrelas`;
+    passwordEntropy.innerHTML = `<div class="password-stars" aria-label="${ariaLabel}"><div>${regularStars}${legendaryStar}</div><p><strong>${strength.label}</strong>: ${strength.detail}</p></div>`;
   }
 
   function renderCrackTime(password) {

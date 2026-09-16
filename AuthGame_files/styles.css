@@ -278,6 +278,10 @@ h1#kc-page-title {
     color: var(--rc-ink);
 }
 
+#passwordEntropy:empty {
+    display: none;
+}
+
 .password-meter {
     padding: 12px;
     border: 1px solid var(--rc-line);

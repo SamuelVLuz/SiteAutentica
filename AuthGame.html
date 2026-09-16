@@ -11,7 +11,7 @@
     <link href="AuthGame_files/patternfly-additions.min.css" rel="stylesheet">
     <link href="AuthGame_files/pficon.css" rel="stylesheet">
     <link href="AuthGame_files/login.css" rel="stylesheet">
-    <link href="AuthGame_files/styles.css?v=layout-20260830" rel="stylesheet">
+    <link href="AuthGame_files/styles.css?v=layout-20260914" rel="stylesheet">
     <link href="AuthGame_files/footer.css" rel="stylesheet">
     <script>
         window.addEventListener("DOMContentLoaded", function () {
@@ -74,7 +74,7 @@
                                         data-label-hide="Ocultar senha">Ver</button>
                                 </div>
 
-                                <div class="select-mode">
+                                <div class="select-mode" hidden>
                                     <button id="modeToggle" type="button">Modo: Comparação</button>
                                 </div>
                                 <div id="passwordEntropy" aria-live="polite"></div>
@@ -108,7 +108,7 @@
         </section>
     </main>
 
-    <script type="module" src="AuthGame_files/entropy.js"></script>
+    <script type="module" src="AuthGame_files/entropy.js?v=modes-20260914"></script>
     <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
     <script type="module" src="AuthGame_files/zxcvbn.js"></script>
 </body>
