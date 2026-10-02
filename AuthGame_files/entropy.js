@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const entropy = calculateEntropy(password);
     const strength = getStrength(entropy);
     switch (activeMode) {
-      case 'score': renderComparison(entropy, strength); break;
+      case 'score': renderComparison(entropy); break;
       case 'bar': renderStrengthBar(strength); break;
       case 'stars': renderStars(strength); break;
       case 'time': renderCrackTime(password); break;
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function calculateEntropy(password) {
     const range = getCharacterRange(password);
-    return password.length && range ? password.length * Math.log2(range) : 0;
+    return password.length && range ? Math.log2(range ** password.length) : 0;
   }
 
   function getCharacterRange(password) {
@@ -129,13 +129,24 @@ document.addEventListener('DOMContentLoaded', function () {
     return { label: 'Lendária', detail: 'nível chefe final: guarde-a em segurança.', score: 6, percent: 100, className: 'is-legendary' };
   }
 
-  function renderComparison(entropy, strength) {
+  function getComparisonClass(percentile) {
+    if (percentile < 20) return 'is-weak';
+    if (percentile < 40) return 'is-basic';
+    if (percentile < 70) return 'is-good';
+    if (percentile < 90) return 'is-strong';
+    if (percentile < 99) return 'is-excellent';
+    return 'is-legendary';
+  }
+
+  function renderComparison(entropy) {
     const percentile = getPercentile(entropy);
-    const note = percentile >= 90 ? 'Ela está bem acima das senhas comuns. Belo trabalho.'
-      : percentile >= 70 ? 'Ela passou pela maior parte da lista — ótimo sinal.'
-      : percentile >= 40 ? 'Ela está no meio do caminho; mais alguns detalhes ajudam bastante.'
-      : 'Ela ainda parece familiar demais para uma lista de senhas comuns.';
-    passwordEntropy.innerHTML = `<div class="password-meter"><div class="password-meter__header"><span>Comparação com senhas conhecidas</span><strong>${percentile}%</strong></div><div class="password-meter__track" aria-hidden="true"><span class="password-meter__fill ${strength.className}" style="width: ${Math.max(percentile, 4)}%"></span></div><p>${note}</p></div>`;
+    const comparisonClass = getComparisonClass(percentile);
+    const note = percentile >= 99 ? 'No topo do mundo!!! Continue assim!'
+      : percentile >= 90 ? 'Ela está muito acima das outras. Belo trabalho!'
+      : percentile >= 70 ? 'Superou mais da metade - ótimo trabalho!'
+      : percentile >= 40 ? 'Ela está no meio do caminho; ainda podemos melhorar.'
+      : 'Ainda parece familiar as outras, podemos fazer melhor.';
+    passwordEntropy.innerHTML = `<div class="password-meter"><div class="password-meter__header"><span>Comparação com senhas conhecidas</span><strong>${percentile}%</strong></div><div class="password-meter__track" aria-hidden="true"><span class="password-meter__fill ${comparisonClass}" style="width: ${Math.max(percentile, 4)}%"></span></div><p>${note}</p></div>`;
   }
 
   function renderStrengthBar(strength) {
@@ -161,14 +172,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getCrackTimeMessage(time) {
-    if (time.includes('centur')) return 'Séculos — levariam gerações inteiras para descobrir essa. Impressionante.';
+    if (time.includes('centur')) return 'Séculos — levariam gerações inteiras para descobrir essa. Bravo!';
     const translated = translateTime(time);
     if (time.includes('year')) return `${translated}. Dá para envelhecer com tranquilidade esperando.`;
     if (time.includes('month')) return `${translated}. Tempo suficiente para muita coisa mudar.`;
-    if (time.includes('day')) return `${translated}. Já não é uma senha para subestimar.`;
+    if (time.includes('day')) return `${translated}. Já não pode sersubestimada.`;
     if (time.includes('hour')) return `${translated}. Um café não vai ser suficiente para quebrá-la.`;
-    if (time.includes('minute')) return `${translated}. Vamos reforçar essa defesa.`;
-    return `${translated}. Essa foi rápida demais — tente adicionar mais variedade.`;
+    if (time.includes('minute')) return `${translated}. Uma dorzinha de cabeça, vamos reforçar MAIS!`;
+    return `${translated}. Essa foi rápida demais — em pouco tempo descobrem.`;
   }
 
   function translateTime(time) {

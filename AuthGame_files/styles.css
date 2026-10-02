@@ -1,20 +1,4 @@
-@font-face {
-    font-family: "CenturyGothic";
-    src: local("CenturyGothic"),
-    url('../fonts/CenturyGothic.ttf') format("truetype");
-}
-
-@font-face {
-    font-family: "CenturyGothicBold";
-    src: local("CenturyGothic"),
-    url('../fonts/century-gothic-bold.ttf') format("truetype");
-}
-
-@font-face {
-    font-family: "Museo900";
-    src: local("Museo900"),
-    url('../fonts/Museo 900.otf') format("truetype");
-}
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
     --rc-cyan: #2364AA;
@@ -45,7 +29,7 @@
 }
 
 body {
-    font-family: CenturyGothic, serif;
+    font-family: "Public Sans", Arial, sans-serif;
     color: var(--rc-ink);
 }
 
@@ -93,15 +77,15 @@ body {
 }
 
 h1#kc-page-title {
-    font-family: Museo900, serif;
-    font-weight: bolder;
+    font-family: "Public Sans", Arial, sans-serif;
+    font-weight: 800;
     font-size: 28px;
     color: var(--pf-global--primary-color--100);
 }
 
 #cpf-hint {
-	font-family: CenturyGothicBold, serif;
-	font-weight: normal;
+	font-family: "Public Sans", Arial, sans-serif;
+	font-weight: 600;
 	font-size: 18px;
 	color: var(--pf-global--primary-color--100);
 }
@@ -128,7 +112,8 @@ h1#kc-page-title {
 }
 
 .continue-with-hint .arrow {
-	font-family: CenturyGothicBold, serif;
+	font-family: "Public Sans", Arial, sans-serif;
+	font-weight: 700;
 }
 
 .card-pf {
