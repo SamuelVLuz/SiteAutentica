@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
       : percentile >= 70 ? 'Superou mais da metade - ótimo trabalho!'
       : percentile >= 40 ? 'Ela está no meio do caminho; ainda podemos melhorar.'
       : 'Ainda parece familiar as outras, podemos fazer melhor.';
-    passwordEntropy.innerHTML = `<div class="password-meter"><div class="password-meter__header"><span>Comparação com senhas conhecidas</span><strong>${percentile}%</strong></div><div class="password-meter__track" aria-hidden="true"><span class="password-meter__fill ${comparisonClass}" style="width: ${Math.max(percentile, 4)}%"></span></div><p>${note}</p></div>`;
+    passwordEntropy.innerHTML = `<div class="password-meter"><div class="password-meter__header"><span>Força relativa da senha</span><strong>${percentile}%</strong></div><div class="password-meter__track" aria-hidden="true"><span class="password-meter__fill ${comparisonClass}" style="width: ${Math.max(percentile, 4)}%"></span></div><p>${note}</p></div>`;
   }
 
   function renderStrengthBar(strength) {
