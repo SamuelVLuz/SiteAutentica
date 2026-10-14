@@ -274,6 +274,34 @@ h1#kc-page-title {
     line-height: 1.45;
 }
 
+.password-policy-feedback.is-invalid {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border-left: 2px solid #d49a32;
+    border-radius: 4px;
+    background: #fffaf0;
+    color: #765719;
+}
+
+.password-policy-feedback.is-invalid::before {
+    content: "!";
+    display: inline-flex;
+    flex: 0 0 16px;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    border: 1px solid #c28b25;
+    border-radius: 50%;
+    color: #9b6d15;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
 .password-meter {
     padding: 12px;
     border: 1px solid var(--rc-line);
@@ -619,6 +647,14 @@ h1#kc-page-title {
 .auth-page .pf-c-form-control:focus {
     border-color: var(--pf-global--primary-color--100);
     box-shadow: 0 0 0 3px rgba(35, 100, 170, 0.12);
+}
+
+.auth-page--register #password[aria-invalid="true"] {
+    border-color: #d49a32;
+}
+
+.auth-page--register #password[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px rgba(212, 154, 50, 0.14);
 }
 
 .auth-page .pf-c-input-group .pf-c-form-control {

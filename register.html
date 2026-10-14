@@ -11,7 +11,7 @@
     <link href="AuthGame_files/patternfly-additions.min.css" rel="stylesheet">
     <link href="AuthGame_files/pficon.css" rel="stylesheet">
     <link href="AuthGame_files/login.css" rel="stylesheet">
-    <link href="AuthGame_files/styles.css?v=layout-20261001" rel="stylesheet">
+    <link href="AuthGame_files/styles.css?v=password-feedback-20261014" rel="stylesheet">
     <link href="AuthGame_files/footer.css" rel="stylesheet">
 </head>
 
@@ -98,6 +98,7 @@
             if (PASSWORD_POLICY.enabled && (!policy || !policy.valid)) {
                 const feedback = document.getElementById("passwordPolicyFeedback");
                 feedback.textContent = policy?.message || PASSWORD_POLICY.messages.loading;
+                feedback.classList.add("is-invalid");
                 document.getElementById("password").setAttribute("aria-invalid", "true");
                 document.getElementById("password").focus();
                 return;

@@ -84,18 +84,26 @@ document.addEventListener('DOMContentLoaded', function () {
   function updatePolicyFeedback(password) {
     const feedback = document.getElementById('passwordPolicyFeedback');
     if (!feedback || !password) {
-      if (feedback) feedback.textContent = '';
+      if (feedback) {
+        feedback.textContent = '';
+        feedback.classList.remove('is-invalid');
+      }
       passwordField?.setAttribute('aria-invalid', 'false');
       return;
     }
     const result = window.evaluatePasswordPolicy?.(password, window.PASSWORD_POLICY);
     if (!window.PASSWORD_POLICY?.enabled) {
       feedback.textContent = '';
+      feedback.classList.remove('is-invalid');
       passwordField?.setAttribute('aria-invalid', 'false');
       return;
     }
-    feedback.textContent = result?.valid ? 'Senha aprovada.' : (result?.message || window.PASSWORD_POLICY.messages.loading);
-    passwordField?.setAttribute('aria-invalid', result?.valid ? 'false' : 'true');
+    const invalid = !result?.valid;
+    feedback.textContent = invalid
+      ? (result?.message || window.PASSWORD_POLICY.messages.loading)
+      : 'Senha aprovada.';
+    feedback.classList.toggle('is-invalid', invalid);
+    passwordField?.setAttribute('aria-invalid', invalid ? 'true' : 'false');
   }
 
   function configureTestMode() {
