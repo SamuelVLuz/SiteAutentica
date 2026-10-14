@@ -24,8 +24,79 @@ document.addEventListener('DOMContentLoaded', function () {
   preserveModeBetweenPages();
 
   if (evaluationMode === 'score' || evaluationMode === 'all') loadReferenceList();
-  passwordField?.addEventListener('input', () => updateFeedback(passwordField.value));
+  passwordField?.addEventListener('input', () => {
+    updateFeedback(passwordField.value);
+    updatePolicyFeedback(passwordField.value);
+  });
   if (passwordField) updateFeedback(passwordField.value);
+  if (passwordField) updatePolicyFeedback(passwordField.value);
+
+  window.evaluatePasswordPolicy = function (password, policy) {
+    if (!policy?.enabled) return { valid: true };
+    const mode = getActiveMode();
+
+    if (mode === 'none') {
+      const baseline = policy.baseline;
+      const valid = password.length >= baseline.minimumLength
+        && (!baseline.requireLetter || /[a-zA-ZÀ-ÿ]/.test(password))
+        && (!baseline.requireNumber || /\d/.test(password))
+        && (!baseline.requireSpecial || /[^a-zA-Z0-9]/.test(password));
+      return { valid, message: valid ? '' : policy.messages.baseline };
+    }
+
+    if (mode === 'score' && !listState.ready) {
+      return { valid: false, pending: true, message: policy.messages.loading };
+    }
+
+    const entropy = calculateEntropy(password);
+    const strength = getStrength(entropy);
+    const percentile = getPercentile(entropy);
+    const crackTime = mode === 'time' && typeof zxcvbn === 'function'
+      ? zxcvbn(password).crack_times_seconds.offline_slow_hashing_1e4_per_second
+      : 0;
+    const valid = mode === 'score'
+      ? percentile >= policy.minimumPercentile
+      : mode === 'time'
+        ? crackTime >= policy.minimumCrackTimeSeconds
+        : strength.score >= policy.minimumScore;
+    const message = valid ? '' : getModePolicyMessage(policy, mode);
+    return { valid, message, strength, percentile, crackTime };
+  };
+
+  function getModePolicyMessage(policy, mode) {
+    const scoreLabels = { 1: 'Fraca', 2: 'Básica', 3: 'Boa', 4: 'Forte', 5: 'Excelente', 6: 'Lendária' };
+    const time = formatPolicyDuration(policy.minimumCrackTimeSeconds);
+    const template = policy.messages[mode] || 'A senha não atingiu o mínimo exigido para este modo.';
+    return template
+      .replace('{percentile}', policy.minimumPercentile)
+      .replace('{score}', policy.minimumScore)
+      .replace('{level}', scoreLabels[policy.minimumScore] || 'Boa')
+      .replace('{time}', time);
+  }
+
+  function formatPolicyDuration(seconds) {
+    if (seconds % 86400 === 0) return `${seconds / 86400} ${seconds / 86400 === 1 ? 'dia' : 'dias'}`;
+    if (seconds % 3600 === 0) return `${seconds / 3600} ${seconds / 3600 === 1 ? 'hora' : 'horas'}`;
+    if (seconds % 60 === 0) return `${seconds / 60} ${seconds / 60 === 1 ? 'minuto' : 'minutos'}`;
+    return `${seconds} ${seconds === 1 ? 'segundo' : 'segundos'}`;
+  }
+
+  function updatePolicyFeedback(password) {
+    const feedback = document.getElementById('passwordPolicyFeedback');
+    if (!feedback || !password) {
+      if (feedback) feedback.textContent = '';
+      passwordField?.setAttribute('aria-invalid', 'false');
+      return;
+    }
+    const result = window.evaluatePasswordPolicy?.(password, window.PASSWORD_POLICY);
+    if (!window.PASSWORD_POLICY?.enabled) {
+      feedback.textContent = '';
+      passwordField?.setAttribute('aria-invalid', 'false');
+      return;
+    }
+    feedback.textContent = result?.valid ? 'Senha aprovada.' : (result?.message || window.PASSWORD_POLICY.messages.loading);
+    passwordField?.setAttribute('aria-invalid', result?.valid ? 'false' : 'true');
+  }
 
   function configureTestMode() {
     if (modeControl) modeControl.hidden = evaluationMode !== 'all';
@@ -37,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
       localStorage.setItem('passwordMode', modes[currentModeIndex]);
       renderModeButton();
       updateFeedback(passwordField.value);
+      updatePolicyFeedback(passwordField.value);
     });
   }
 
@@ -73,7 +145,10 @@ document.addEventListener('DOMContentLoaded', function () {
       // A lista de referência é um aprimoramento visual; a avaliação continua com valores locais.
     } finally {
       listState.ready = true;
-      if (passwordField) updateFeedback(passwordField.value);
+      if (passwordField) {
+        updateFeedback(passwordField.value);
+        updatePolicyFeedback(passwordField.value);
+      }
     }
   }
 

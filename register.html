@@ -51,6 +51,7 @@
                                 <button id="modeToggle" type="button">Modo: Comparação</button>
                             </div>
                             <div id="passwordEntropy" aria-live="polite"></div>
+                            <div id="passwordPolicyFeedback" class="password-policy-feedback" aria-live="polite"></div>
                         </div>
 
                         <div class="auth-actions">
@@ -68,12 +69,39 @@
     </main>
 
     <script>
+        // Ajuste esta configuração para personalizar ou desligar a regra do cadastro.
+        const PASSWORD_POLICY = {
+            enabled: true,
+            minimumScore: 3,
+            minimumPercentile: 40,
+            minimumCrackTimeSeconds: 3600,
+            baseline: { minimumLength: 8, requireLetter: true, requireNumber: true, requireSpecial: true },
+            messages: {
+                score: "A senha precisa ser melhor que pelo menos {percentile}% das senhas.",
+                bar: "A senha precisa ser pelo menos {level}.",
+                stars: "A senha precisa atingir pelo menos {score} estrelas.",
+                time: "O tempo estimado precisa ser de pelo menos {time}.",
+                baseline: "A senha precisa ter pelo menos 8 caracteres, uma letra, um número e um caractere especial.",
+                loading: "Aguarde enquanto avaliamos a senha."
+            }
+        };
+        window.PASSWORD_POLICY = PASSWORD_POLICY;
+
         document.getElementById("kc-register-form").addEventListener("submit", function (event) {
             event.preventDefault();
             const usuario = document.getElementById("usuario").value;
             const senha = document.getElementById("password").value;
 
             if (!usuario || !senha) return;
+
+            const policy = window.evaluatePasswordPolicy?.(senha, PASSWORD_POLICY);
+            if (PASSWORD_POLICY.enabled && (!policy || !policy.valid)) {
+                const feedback = document.getElementById("passwordPolicyFeedback");
+                feedback.textContent = policy?.message || PASSWORD_POLICY.messages.loading;
+                document.getElementById("password").setAttribute("aria-invalid", "true");
+                document.getElementById("password").focus();
+                return;
+            }
 
             localStorage.setItem("usuario", usuario);
             localStorage.setItem("senha", senha);
@@ -82,7 +110,7 @@
             window.location.href = window.getAuthModeUrl ? window.getAuthModeUrl("AuthGame.html") : "AuthGame.html";
         });
     </script>
-    <script type="module" src="AuthGame_files/entropy.js?v=modes-20260916"></script>
+    <script type="module" src="AuthGame_files/entropy.js?v=policy-mode-messages-20261014"></script>
     <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
     <script type="module" src="AuthGame_files/zxcvbn.js"></script>
 </body>

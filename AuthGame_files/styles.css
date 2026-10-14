@@ -267,6 +267,13 @@ h1#kc-page-title {
     display: none;
 }
 
+.password-policy-feedback {
+    margin-top: 8px;
+    color: var(--rc-muted);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
 .password-meter {
     padding: 12px;
     border: 1px solid var(--rc-line);
