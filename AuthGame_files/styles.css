@@ -767,6 +767,51 @@ h1#kc-page-title {
     text-decoration: none;
 }
 
+.study-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 28px 18px;
+}
+
+.study-card {
+    width: min(100%, 760px);
+    padding: clamp(26px, 5vw, 48px);
+    border: 1px solid rgba(216, 224, 234, 0.92);
+    border-top: 5px solid var(--pf-global--primary-color--100);
+    border-radius: 14px;
+    background: var(--rc-paper);
+    box-shadow: 0 24px 60px rgba(31, 54, 87, 0.14);
+    line-height: 1.65;
+}
+
+.study-card h1 { margin: 8px 0 16px; font-size: clamp(25px, 4vw, 34px); }
+.study-card h2 { margin: 0 0 8px; font-size: 17px; }
+.study-card p { color: var(--rc-muted); }
+.study-note { margin: 24px 0; padding: 18px 20px; border: 1px solid var(--rc-line); border-radius: 10px; background: #f8fbff; }
+.study-note ul { margin: 8px 0 0; padding-left: 22px; color: var(--rc-muted); }
+.study-note li + li { margin-top: 8px; }
+.study-contact { font-size: 13px; }
+.study-consent { display: flex; align-items: flex-start; gap: 10px; margin: 24px 0 16px; color: var(--rc-ink); font-weight: 600; }
+.study-consent input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--pf-global--primary-color--100); }
+.study-button { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 12px 18px; border-radius: 999px; color: white; font-weight: 700; text-align: center; text-decoration: none; }
+.study-button[disabled] { cursor: not-allowed; opacity: .55; }
+.experiment-success { margin-top: 20px; }
+.experiment-success h2 { color: var(--rc-ink); font-size: 21px; }
+.study-survey-frame { width: 100%; min-height: 680px; border: 0; }
+.participant-reference dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 14px; margin: 14px 0 0; }
+.participant-reference dt { color: var(--rc-muted); font-size: 13px; }
+.participant-reference dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.participant-reference code { color: var(--rc-ink); font-size: 13px; }
+.copy-code-button { margin-left: 8px; padding: 5px 9px; border: 1px solid var(--rc-line); border-radius: 5px; background: #fff; color: var(--pf-global--primary-color--100); cursor: pointer; }
+
+@media (max-width: 540px) {
+    .study-page { padding: 14px 10px; }
+    .study-card { border-radius: 10px; }
+    .participant-reference dl { grid-template-columns: 1fr; gap: 4px; }
+    .participant-reference dd + dt { margin-top: 8px; }
+}
+
 .auth-shell--single {
     width: min(100%, 530px);
     padding: 44px 48px 38px;

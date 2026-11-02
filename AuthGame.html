@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="login-pf" lang="pt-BR">
+<html class="login-pf" lang="pt-BR" data-experiment-stage="experimento">
 
 <head>
     <meta charset="UTF-8">
@@ -29,7 +29,9 @@
                 }
 
                 if (usuarioDigitado === usuarioSalvo && senhaDigitada === senhaSalva) {
-                    alert("Login realizado! Bem-vindo ao portal.");
+                    document.getElementById("login-success").hidden = false;
+                    document.getElementById("kc-form-login").hidden = true;
+                    document.querySelector(".auth-card__footer").hidden = true;
                 } else {
                     alert("Usuário ou senha incorretos.");
                 }
@@ -67,7 +69,7 @@
                                     <a tabindex="5" href="#">Esqueceu a senha?</a>
                                 </div>
                                 <div class="pf-c-input-group" dir="ltr">
-                                    <input tabindex="2" id="password" class="pf-c-form-control" name="password" type="password"
+                                    <input tabindex="2" id="password" class="pf-c-form-control" name="password" type="password" data-clarity-mask="true"
                                         autocomplete="current-password" aria-invalid="false" required>
                                     <button class="pf-c-button pf-m-control" type="button" aria-label="Mostrar senha"
                                         aria-controls="password" data-password-toggle data-label-show="Mostrar senha"
@@ -85,6 +87,12 @@
                                     type="submit" value="Entrar">
                             </div>
                         </form>
+
+                        <section id="login-success" class="experiment-success" aria-live="polite" hidden>
+                            <h2>Atividade concluída</h2>
+                            <p>Agora você pode seguir para o questionário final.</p>
+                            <a class="pf-c-button pf-m-primary pf-m-block btn-lg study-button" data-flow-destination="pos.html" href="pos.html">Continuar para o pós-teste</a>
+                        </section>
 
                         <footer class="auth-card__footer">
                             <span>Primeira vez por aqui?</span>
@@ -111,6 +119,7 @@
     <script type="module" src="AuthGame_files/entropy.js?v=modes-20260916"></script>
     <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
     <script type="module" src="AuthGame_files/zxcvbn.js"></script>
+    <script src="AuthGame_files/experimentFlow.js?v=experiment-flow-20261019"></script>
 </body>
 
 </html>

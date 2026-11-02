@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="login-pf" lang="pt-BR">
+<html class="login-pf" lang="pt-BR" data-experiment-stage="experimento">
 
 <head>
     <meta charset="UTF-8">
@@ -40,7 +40,7 @@
                         <div class="form-group no-bottom-margin">
                             <label for="password" class="pf-c-form__label pf-c-form__label-text">Crie uma senha</label>
                             <div class="pf-c-input-group" dir="ltr">
-                                <input id="password" class="pf-c-form-control" name="password" type="password"
+                                <input id="password" class="pf-c-form-control" name="password" type="password" data-clarity-mask="true"
                                     autocomplete="new-password" aria-invalid="false" required>
                                 <button class="pf-c-button pf-m-control" type="button" aria-label="Mostrar senha"
                                     aria-controls="password" data-password-toggle data-label-show="Mostrar senha"
@@ -114,6 +114,7 @@
     <script type="module" src="AuthGame_files/entropy.js?v=policy-mode-messages-20261014"></script>
     <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
     <script type="module" src="AuthGame_files/zxcvbn.js"></script>
+    <script src="AuthGame_files/experimentFlow.js?v=experiment-flow-20261019"></script>
 </body>
 
 </html>
