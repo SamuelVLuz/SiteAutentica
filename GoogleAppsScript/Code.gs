@@ -5,10 +5,10 @@ const RESPONSE_HEADERS = [
   "Código do experimento",
   "Modo utilizado",
   "SEQ: facilidade geral (1–7)",
-  "Avaliação fácil de entender (1–5)",
-  "Avaliação influenciou escolha/ajuste (1–5)",
-  "Maior confiança na segurança (1–5)",
-  "Informações claras (1–5)",
+  "Avaliação fácil de entender (1–7)",
+  "Avaliação influenciou escolha/ajuste (1–7)",
+  "Maior confiança na segurança (1–7)",
+  "Informações claras (1–7)",
   "Sugestões",
   "Entropia da senha (bits)"
 ];
@@ -64,10 +64,10 @@ function saveResponse(response) {
   if (!allowedModes.includes(mode)) throw new Error("Modo do experimento inválido.");
 
   const seq = scaleValue(response.seq, 1, 7, "SEQ");
-  const understand = scaleValue(response.understand, 1, 5, "Compreensão");
-  const influence = scaleValue(response.influence, 1, 5, "Influência");
-  const confidence = scaleValue(response.confidence, 1, 5, "Confiança");
-  const clarity = scaleValue(response.clarity, 1, 5, "Clareza");
+  const understand = scaleValue(response.understand, 1, 7, "Compreensão");
+  const influence = scaleValue(response.influence, 1, 7, "Influência");
+  const confidence = scaleValue(response.confidence, 1, 7, "Confiança");
+  const clarity = scaleValue(response.clarity, 1, 7, "Clareza");
   const suggestion = String(response.suggestion || "").trim().slice(0, 4000);
   const entropyBits = Number(response.entropyBits);
   if (!Number.isFinite(entropyBits) || entropyBits < 0 || entropyBits > 4096) {

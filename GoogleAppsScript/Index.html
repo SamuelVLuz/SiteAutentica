@@ -56,45 +56,45 @@
       <fieldset>
         <legend>A forma como o sistema avaliou sua senha foi fácil de entender.</legend>
         <div class="scale scale--five">
-          <? for (var i = 1; i <= 5; i++) { ?>
+          <? for (var i = 1; i <= 7; i++) { ?>
             <label><input type="radio" name="understand" value="<?= i ?>" required><span><?= i ?></span></label>
           <? } ?>
         </div>
-        <div class="endpoints"><span>1 = Discordo totalmente</span><span>5 = Concordo totalmente</span></div>
+        <div class="endpoints"><span>1 = Discordo totalmente</span><span>7 = Concordo totalmente</span></div>
       </fieldset>
 
       <fieldset>
         <legend>A avaliação apresentada influenciou a forma como escolhi ou ajustei minha senha.</legend>
         <div class="scale scale--five">
-          <? for (var i = 1; i <= 5; i++) { ?>
+          <? for (var i = 1; i <= 7; i++) { ?>
             <label><input type="radio" name="influence" value="<?= i ?>" required><span><?= i ?></span></label>
           <? } ?>
         </div>
-        <div class="endpoints"><span>1 = Discordo totalmente</span><span>5 = Concordo totalmente</span></div>
+        <div class="endpoints"><span>1 = Discordo totalmente</span><span>7 = Concordo totalmente</span></div>
       </fieldset>
 
       <fieldset>
         <legend>A avaliação fez eu sentir mais confiança de que minha senha era segura.</legend>
         <div class="scale scale--five">
-          <? for (var i = 1; i <= 5; i++) { ?>
+          <? for (var i = 1; i <= 7; i++) { ?>
             <label><input type="radio" name="confidence" value="<?= i ?>" required><span><?= i ?></span></label>
           <? } ?>
         </div>
-        <div class="endpoints"><span>1 = Discordo totalmente</span><span>5 = Concordo totalmente</span></div>
+        <div class="endpoints"><span>1 = Discordo totalmente</span><span>7 = Concordo totalmente</span></div>
       </fieldset>
 
-      <fieldset>
+      <!-- <fieldset>
         <legend>As informações apresentadas durante a criação da senha estavam claras.</legend>
         <div class="scale scale--five">
-          <? for (var i = 1; i <= 5; i++) { ?>
+          <? for (var i = 1; i <= 7; i++) { ?>
             <label><input type="radio" name="clarity" value="<?= i ?>" required><span><?= i ?></span></label>
           <? } ?>
         </div>
         <div class="endpoints"><span>1 = Discordo totalmente</span><span>5 = Concordo totalmente</span></div>
-      </fieldset>
+      </fieldset> -->
 
       <fieldset>
-        <legend>Você faria alguma alteração nessa interface?</legend>
+        <legend>Como você mudaria a sua experiência?</legend>
         <textarea name="suggestion" maxlength="4000" aria-label="Sugestões para a interface"></textarea>
       </fieldset>
 
