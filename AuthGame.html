@@ -29,9 +29,10 @@
                 }
 
                 if (usuarioDigitado === usuarioSalvo && senhaDigitada === senhaSalva) {
-                    document.getElementById("login-success").hidden = false;
-                    document.getElementById("kc-form-login").hidden = true;
-                    document.querySelector(".auth-card__footer").hidden = true;
+                    const destination = new URL("pos.html", window.location.href);
+                    const mode = new URLSearchParams(window.location.search).get("modo");
+                    if (mode) destination.searchParams.set("modo", mode);
+                    window.location.href = destination.href;
                 } else {
                     alert("Usuário ou senha incorretos.");
                 }
@@ -88,12 +89,6 @@
                             </div>
                         </form>
 
-                        <section id="login-success" class="experiment-success" aria-live="polite" hidden>
-                            <h2>Atividade concluída</h2>
-                            <p>Agora você pode seguir para o questionário final.</p>
-                            <a class="pf-c-button pf-m-primary pf-m-block btn-lg study-button" data-flow-destination="pos.html" href="pos.html">Continuar para o pós-teste</a>
-                        </section>
-
                         <footer class="auth-card__footer">
                             <span>Primeira vez por aqui?</span>
                             <a href="register.html">Criar uma conta</a>
@@ -116,10 +111,10 @@
         </section>
     </main>
 
-    <script type="module" src="AuthGame_files/entropy.js?v=modes-20260916"></script>
+    <script type="module" src="AuthGame_files/entropy.js?v=entropy-capture-20261103"></script>
     <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
     <script type="module" src="AuthGame_files/zxcvbn.js"></script>
-    <script src="AuthGame_files/experimentFlow.js?v=experiment-flow-20261019"></script>
+    <script src="AuthGame_files/experimentFlow.js?v=experiment-flow-20261103-post"></script>
 </body>
 
 </html>

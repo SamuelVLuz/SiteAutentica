@@ -34,21 +34,50 @@
     }
 
     function startClarity(currentStage) {
-        if (!tracked) return;
+        if (!tracked || sessionStorage.getItem("clarity_consent") !== "yes") return Promise.resolve();
         const id = participantId();
+        const continueAfterBriefWait = promise => Promise.race([
+            promise,
+            new Promise(resolve => window.setTimeout(resolve, 1500))
+        ]);
         window.clarity = window.clarity || function () {
             (window.clarity.q = window.clarity.q || []).push(arguments);
         };
-        window.clarity("set", "etapa", currentStage);
-        window.clarity("set", "modo_experimento", mode);
-        window.clarity("set", "experimento_id", id);
-        if (!document.querySelector("script[data-clarity-project]")) {
-            const script = document.createElement("script");
-            script.async = true;
-            script.src = "https://www.clarity.ms/tag/" + clarityProjectId;
-            script.dataset.clarityProject = "true";
-            document.head.appendChild(script);
+        const setTags = () => {
+            window.clarity("set", "etapa", currentStage);
+            window.clarity("set", "modo_experimento", mode);
+            window.clarity("set", "experimento_id", id);
+        };
+        // Queue the tags immediately, then repeat after the Clarity library is ready.
+        setTags();
+
+        let script = document.querySelector("script[data-clarity-project]");
+        if (script) {
+            if (script.dataset.clarityLoaded === "true") setTags();
+            else script.addEventListener("load", () => {
+                script.dataset.clarityLoaded = "true";
+                setTags();
+            }, { once: true });
+            return continueAfterBriefWait(new Promise(resolve => {
+                if (script.dataset.clarityLoaded === "true") resolve();
+                else script.addEventListener("load", resolve, { once: true });
+            }));
         }
+
+        script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.clarity.ms/tag/" + clarityProjectId;
+        script.dataset.clarityProject = "true";
+        const ready = new Promise(resolve => {
+            script.addEventListener("load", () => {
+                script.dataset.clarityLoaded = "true";
+                setTags();
+                resolve();
+            }, { once: true });
+            script.addEventListener("error", resolve, { once: true });
+        });
+        document.head.appendChild(script);
+        return continueAfterBriefWait(ready);
     }
 
     function flowUrl(path) {
@@ -63,6 +92,7 @@
 
     if (stage === "pre") {
         const consent = document.getElementById("study-consent");
+        const clarityConsent = document.getElementById("clarity-consent");
         const start = document.getElementById("start-experiment");
         if (consent && start) {
             start.disabled = !consent.checked;
@@ -71,9 +101,11 @@
                 event.preventDefault();
                 if (!consent.checked) return;
                 participantId();
-                startClarity("pre");
+                sessionStorage.setItem("clarity_consent", clarityConsent?.checked ? "yes" : "no");
                 start.disabled = true;
-                window.setTimeout(() => { window.location.href = flowUrl("register.html"); }, tracked ? 350 : 0);
+                startClarity("pre").then(() => {
+                    window.location.href = flowUrl("register.html");
+                });
             });
         }
     } else {
@@ -82,26 +114,18 @@
     }
 
     const surveyFrame = document.getElementById("post-survey-frame");
-    const idForSurvey = sessionStorage.getItem("experimento_id") || "";
-    const formUrl = (window.POST_SURVEY_EMBED_URL || "")
-        .replaceAll("{experimento_id}", encodeURIComponent(idForSurvey))
-        .replaceAll("{modo_experimento}", encodeURIComponent(mode));
-    if (surveyFrame && formUrl) {
-        surveyFrame.src = formUrl;
+    const surveyBootstrap = document.getElementById("post-survey-bootstrap");
+    const surveyStatus = document.getElementById("post-survey-status");
+    const surveyUrl = (window.POST_SURVEY_WEB_APP_URL || "").trim();
+    if (surveyFrame && surveyBootstrap && surveyUrl) {
+        const idForSurvey = sessionStorage.getItem("experimento_id") || "";
+        const entropyBits = sessionStorage.getItem("entropia_senha_bits");
+        surveyBootstrap.action = surveyUrl;
+        surveyBootstrap.elements.namedItem("experimentId").value = idForSurvey;
+        surveyBootstrap.elements.namedItem("mode").value = mode;
+        surveyBootstrap.elements.namedItem("entropyBits").value = entropyBits || "";
+        surveyFrame.hidden = false;
+        if (surveyStatus) surveyStatus.hidden = true;
+        surveyBootstrap.submit();
     }
-
-    const codeElement = document.getElementById("participant-code");
-    const modeElement = document.getElementById("participant-mode");
-    if (codeElement) codeElement.textContent = idForSurvey || "Não foi possível recuperar o código desta sessão.";
-    if (modeElement) modeElement.textContent = mode;
-    const copyButton = document.getElementById("copy-participant-code");
-    if (copyButton) copyButton.addEventListener("click", async () => {
-        const status = document.getElementById("copy-code-status");
-        try {
-            await navigator.clipboard.writeText(idForSurvey);
-            if (status) status.textContent = "Código copiado.";
-        } catch (_) {
-            if (status) status.textContent = "Selecione e copie o código acima.";
-        }
-    });
 })();

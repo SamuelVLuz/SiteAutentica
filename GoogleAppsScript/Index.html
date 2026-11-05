@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { font-family: Arial, sans-serif; color: #263238; background: #f4f7fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 18px; }
+    main { width: min(100%, 720px); margin: 0 auto; padding: clamp(20px, 5vw, 38px); border: 1px solid #d8e0ea; border-radius: 12px; background: white; box-shadow: 0 12px 32px #1f36571c; }
+    h1 { margin: 0 0 8px; font-size: 25px; }
+    .intro, .hint { color: #667085; line-height: 1.55; }
+    fieldset { margin: 22px 0; padding: 16px; border: 1px solid #d8e0ea; border-radius: 8px; }
+    legend { padding: 0 5px; font-weight: 700; line-height: 1.4; }
+    .scale { display: grid; grid-template-columns: repeat(7, minmax(32px, 1fr)); gap: 5px; margin-top: 12px; }
+    .scale--five { grid-template-columns: repeat(5, minmax(38px, 1fr)); }
+    .scale label { display: grid; justify-items: center; gap: 7px; padding: 9px 2px; border: 1px solid #e1e7ef; border-radius: 6px; cursor: pointer; }
+    .scale label:focus-within, .scale label:has(input:checked) { border-color: #2364aa; background: #eef5ff; }
+    .endpoints { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; color: #667085; font-size: 12px; }
+    textarea { display: block; width: 100%; min-height: 100px; margin-top: 12px; padding: 10px; border: 1px solid #cfd8e3; border-radius: 6px; font: inherit; }
+    button { width: 100%; min-height: 46px; border: 0; border-radius: 24px; background: #2364aa; color: white; font-size: 16px; font-weight: 700; cursor: pointer; }
+    button:disabled { cursor: wait; opacity: .65; }
+    #status { min-height: 24px; margin-top: 12px; color: #667085; }
+    #status.error { color: #a12a2a; }
+    #success { padding: 18px 0; }
+    [hidden] { display: none !important; }
+    @media (max-width: 430px) { body { padding: 10px; } .scale { gap: 3px; } .scale label { padding: 8px 0; font-size: 13px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="survey-loading" role="status">
+      <h1>Questionário de pós-teste</h1>
+      <p class="intro">Abra o questionário pelo fluxo do experimento para continuar.</p>
+    </section>
+
+    <input id="bootstrap-experiment-id" type="hidden" value="<?= experimentId ?>">
+    <input id="bootstrap-mode" type="hidden" value="<?= mode ?>">
+    <input id="bootstrap-entropy" type="hidden" value="<?= entropyBits ?>">
+
+    <form id="survey-form" hidden>
+      <h1>Questionário de pós-teste</h1>
+      <p class="intro">Responda pensando na atividade que acabou de concluir. Não informe senhas nem outros dados pessoais.</p>
+
+      <fieldset>
+        <legend>No geral, quão fácil ou difícil foi concluir a criação e o acesso à conta nesta atividade?</legend>
+        <div class="scale">
+          <? for (var i = 1; i <= 7; i++) { ?>
+            <label><input type="radio" name="seq" value="<?= i ?>" required><span><?= i ?></span></label>
+          <? } ?>
+        </div>
+        <div class="endpoints"><span>1 = Muito difícil</span><span>7 = Muito fácil</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>A forma como o sistema avaliou sua senha foi fácil de entender.</legend>
+        <div class="scale scale--five">
+          <? for (var i = 1; i <= 5; i++) { ?>
+            <label><input type="radio" name="understand" value="<?= i ?>" required><span><?= i ?></span></label>
+          <? } ?>
+        </div>
+        <div class="endpoints"><span>1 = Discordo totalmente</span><span>5 = Concordo totalmente</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>A avaliação apresentada influenciou a forma como escolhi ou ajustei minha senha.</legend>
+        <div class="scale scale--five">
+          <? for (var i = 1; i <= 5; i++) { ?>
+            <label><input type="radio" name="influence" value="<?= i ?>" required><span><?= i ?></span></label>
+          <? } ?>
+        </div>
+        <div class="endpoints"><span>1 = Discordo totalmente</span><span>5 = Concordo totalmente</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>A avaliação fez eu sentir mais confiança de que minha senha era segura.</legend>
+        <div class="scale scale--five">
+          <? for (var i = 1; i <= 5; i++) { ?>
+            <label><input type="radio" name="confidence" value="<?= i ?>" required><span><?= i ?></span></label>
+          <? } ?>
+        </div>
+        <div class="endpoints"><span>1 = Discordo totalmente</span><span>5 = Concordo totalmente</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>As informações apresentadas durante a criação da senha estavam claras.</legend>
+        <div class="scale scale--five">
+          <? for (var i = 1; i <= 5; i++) { ?>
+            <label><input type="radio" name="clarity" value="<?= i ?>" required><span><?= i ?></span></label>
+          <? } ?>
+        </div>
+        <div class="endpoints"><span>1 = Discordo totalmente</span><span>5 = Concordo totalmente</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Você faria alguma alteração nessa interface?</legend>
+        <textarea name="suggestion" maxlength="4000" aria-label="Sugestões para a interface"></textarea>
+      </fieldset>
+
+      <button id="submit-button" type="submit">Enviar respostas</button>
+      <p id="status" aria-live="polite"></p>
+    </form>
+
+    <section id="success" hidden role="status">
+      <h1>Respostas registradas</h1>
+      <p class="intro">Obrigado por concluir o questionário e contribuir com o estudo.</p>
+    </section>
+  </main>
+
+  <script>
+    let participation = null;
+    const form = document.getElementById("survey-form");
+    const loading = document.getElementById("survey-loading");
+    const status = document.getElementById("status");
+    const submitButton = document.getElementById("submit-button");
+
+    const bootstrapId = document.getElementById("bootstrap-experiment-id").value;
+    const bootstrapMode = document.getElementById("bootstrap-mode").value;
+    const bootstrapEntropy = Number(document.getElementById("bootstrap-entropy").value);
+    if (/^(?:[a-f0-9]{32}|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})$/i.test(bootstrapId)
+        && ["todos", "comparacao", "barra", "tempo", "estrelas", "nenhum"].includes(bootstrapMode)
+        && Number.isFinite(bootstrapEntropy) && bootstrapEntropy >= 0 && bootstrapEntropy <= 4096) {
+      participation = { experimentId: bootstrapId, mode: bootstrapMode, entropyBits: bootstrapEntropy };
+      loading.hidden = true;
+      form.hidden = false;
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      if (!participation) return;
+      submitButton.disabled = true;
+      status.classList.remove("error");
+      status.textContent = "Enviando…";
+      const answers = Object.fromEntries(new FormData(form).entries());
+      google.script.run
+        .withSuccessHandler(() => {
+          form.hidden = true;
+          document.getElementById("success").hidden = false;
+        })
+        .withFailureHandler(error => {
+          submitButton.disabled = false;
+          status.classList.add("error");
+          status.textContent = error?.message || "Não foi possível registrar as respostas. Tente novamente.";
+        })
+        .saveResponse({ ...participation, ...answers });
+    });
+  </script>
+</body>
+</html>

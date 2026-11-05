@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updatePolicyFeedback(password) {
     const feedback = document.getElementById('passwordPolicyFeedback');
-    if (!feedback || !password) {
+    if (!feedback || !password || !window.passwordPolicyFeedbackRequested) {
       if (feedback) {
         feedback.textContent = '';
         feedback.classList.remove('is-invalid');
@@ -99,9 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
     const invalid = !result?.valid;
-    feedback.textContent = invalid
-      ? (result?.message || window.PASSWORD_POLICY.messages.loading)
-      : 'Senha aprovada.';
+    feedback.textContent = invalid ? (result?.message || window.PASSWORD_POLICY.messages.loading) : '';
     feedback.classList.toggle('is-invalid', invalid);
     passwordField?.setAttribute('aria-invalid', invalid ? 'true' : 'false');
   }
@@ -182,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const range = getCharacterRange(password);
     return password.length && range ? Math.log2(range ** password.length) : 0;
   }
+  window.calculatePasswordEntropy = calculateEntropy;
 
   function getCharacterRange(password) {
     let range = 0;

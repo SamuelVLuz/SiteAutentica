@@ -86,6 +86,7 @@
             }
         };
         window.PASSWORD_POLICY = PASSWORD_POLICY;
+        window.passwordPolicyFeedbackRequested = false;
 
         document.getElementById("kc-register-form").addEventListener("submit", function (event) {
             event.preventDefault();
@@ -96,6 +97,7 @@
 
             const policy = window.evaluatePasswordPolicy?.(senha, PASSWORD_POLICY);
             if (PASSWORD_POLICY.enabled && (!policy || !policy.valid)) {
+                window.passwordPolicyFeedbackRequested = true;
                 const feedback = document.getElementById("passwordPolicyFeedback");
                 feedback.textContent = policy?.message || PASSWORD_POLICY.messages.loading;
                 feedback.classList.add("is-invalid");
@@ -104,17 +106,26 @@
                 return;
             }
 
+            const entropyBits = window.calculatePasswordEntropy?.(senha);
+            if (Number.isFinite(entropyBits)) {
+                sessionStorage.setItem("entropia_senha_bits", String(entropyBits));
+            } else {
+                sessionStorage.removeItem("entropia_senha_bits");
+            }
+
             localStorage.setItem("usuario", usuario);
             localStorage.setItem("senha", senha);
             localStorage.setItem("passwordMode", localStorage.getItem("passwordMode") || "score");
-            alert("Conta criada! Agora é só entrar.");
-            window.location.href = window.getAuthModeUrl ? window.getAuthModeUrl("AuthGame.html") : "AuthGame.html";
+            const destination = new URL("pos.html", window.location.href);
+            const mode = new URLSearchParams(window.location.search).get("modo");
+            if (mode) destination.searchParams.set("modo", mode);
+            window.location.href = destination.href;
         });
     </script>
-    <script type="module" src="AuthGame_files/entropy.js?v=policy-mode-messages-20261014"></script>
+    <script type="module" src="AuthGame_files/entropy.js?v=entropy-capture-20261103"></script>
     <script type="module" src="AuthGame_files/passwordVisibility.js"></script>
     <script type="module" src="AuthGame_files/zxcvbn.js"></script>
-    <script src="AuthGame_files/experimentFlow.js?v=experiment-flow-20261019"></script>
+    <script src="AuthGame_files/experimentFlow.js?v=experiment-flow-20261103-post"></script>
 </body>
 
 </html>

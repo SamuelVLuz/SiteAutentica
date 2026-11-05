@@ -799,17 +799,10 @@ h1#kc-page-title {
 .experiment-success { margin-top: 20px; }
 .experiment-success h2 { color: var(--rc-ink); font-size: 21px; }
 .study-survey-frame { width: 100%; min-height: 680px; border: 0; }
-.participant-reference dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 14px; margin: 14px 0 0; }
-.participant-reference dt { color: var(--rc-muted); font-size: 13px; }
-.participant-reference dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
-.participant-reference code { color: var(--rc-ink); font-size: 13px; }
-.copy-code-button { margin-left: 8px; padding: 5px 9px; border: 1px solid var(--rc-line); border-radius: 5px; background: #fff; color: var(--pf-global--primary-color--100); cursor: pointer; }
 
 @media (max-width: 540px) {
     .study-page { padding: 14px 10px; }
     .study-card { border-radius: 10px; }
-    .participant-reference dl { grid-template-columns: 1fr; gap: 4px; }
-    .participant-reference dd + dt { margin-top: 8px; }
 }
 
 .auth-shell--single {
