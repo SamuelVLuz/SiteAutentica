@@ -124,6 +124,8 @@
         surveyBootstrap.elements.namedItem("experimentId").value = idForSurvey;
         surveyBootstrap.elements.namedItem("mode").value = mode;
         surveyBootstrap.elements.namedItem("entropyBits").value = entropyBits || "";
+        surveyBootstrap.elements.namedItem("attempts").value = sessionStorage.getItem("tentativas_senha") || "0";
+        surveyBootstrap.elements.namedItem("durationSeconds").value = sessionStorage.getItem("duracao_experimento_segundos") || "0";
         surveyFrame.hidden = false;
         if (surveyStatus) surveyStatus.hidden = true;
         surveyBootstrap.submit();

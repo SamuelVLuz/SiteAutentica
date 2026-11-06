@@ -10,7 +10,9 @@ const RESPONSE_HEADERS = [
   "Maior confiança na segurança (1–7)",
   "Informações claras (1–7)",
   "Sugestões",
-  "Entropia da senha (bits)"
+  "Entropia da senha (bits)",
+  "Tentativas de senha",
+  "Duração do experimento (segundos)"
 ];
 
 function doGet() {
@@ -26,6 +28,8 @@ function renderSurvey_(data) {
   template.experimentId = String(data.experimentId || "");
   template.mode = String(data.mode || "");
   template.entropyBits = String(data.entropyBits || "");
+  template.attempts = String(data.attempts || "");
+  template.durationSeconds = String(data.durationSeconds || "");
   return template.evaluate()
     .setTitle("Questionário de pós-teste")
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
@@ -67,9 +71,10 @@ function saveResponse(response) {
   const understand = scaleValue(response.understand, 1, 7, "Compreensão");
   const influence = scaleValue(response.influence, 1, 7, "Influência");
   const confidence = scaleValue(response.confidence, 1, 7, "Confiança");
-  const clarity = scaleValue(response.clarity, 1, 7, "Clareza");
   const suggestion = String(response.suggestion || "").trim().slice(0, 4000);
   const entropyBits = Number(response.entropyBits);
+  const attempts = scaleValue(response.attempts, 1, 10000, "Tentativas");
+  const durationSeconds = scaleValue(response.durationSeconds, 0, 86400, "Duração");
   if (!Number.isFinite(entropyBits) || entropyBits < 0 || entropyBits > 4096) {
     throw new Error("Não foi possível recuperar a entropia da senha desta participação.");
   }
@@ -90,10 +95,25 @@ function saveResponse(response) {
         .findNext();
       if (existingCode) throw new Error("Esta participação já enviou uma resposta.");
     }
-    sheet.appendRow([
-      new Date(), experimentId, mode, seq, understand, influence, confidence, clarity,
-      safeCellText(suggestion), entropyBits
-    ]);
+    const row = new Array(sheet.getLastColumn()).fill("");
+    const valuesByHeader = {
+      "Data/hora": new Date(),
+      "Código do experimento": experimentId,
+      "Modo utilizado": mode,
+      "SEQ: facilidade geral (1–7)": seq,
+      "Avaliação fácil de entender (1–7)": understand,
+      "Avaliação influenciou escolha/ajuste (1–7)": influence,
+      "Maior confiança na segurança (1–7)": confidence,
+      "Sugestões": safeCellText(suggestion),
+      "Entropia da senha (bits)": entropyBits,
+      "Tentativas de senha": attempts,
+      "Duração do experimento (segundos)": durationSeconds
+    };
+    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    headers.forEach((header, index) => {
+      if (Object.prototype.hasOwnProperty.call(valuesByHeader, header)) row[index] = valuesByHeader[header];
+    });
+    sheet.appendRow(row);
   } finally {
     lock.releaseLock();
   }
@@ -103,9 +123,13 @@ function saveResponse(response) {
 
 function ensureHeaders_(sheet) {
   if (!sheet) throw new Error("A aba de respostas não foi encontrada.");
-  const existingHeaders = sheet.getRange(1, 1, 1, RESPONSE_HEADERS.length).getValues()[0];
-  RESPONSE_HEADERS.forEach((header, index) => {
-    if (existingHeaders[index] !== header) sheet.getRange(1, index + 1).setValue(header);
+  let existingHeaders = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
+  RESPONSE_HEADERS.forEach(header => {
+    if (!existingHeaders.includes(header)) {
+      const nextColumn = sheet.getLastColumn() + 1;
+      sheet.getRange(1, nextColumn).setValue(header);
+      existingHeaders[nextColumn - 1] = header;
+    }
   });
   sheet.setFrozenRows(1);
 }

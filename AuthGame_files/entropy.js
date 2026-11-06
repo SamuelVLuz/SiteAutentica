@@ -99,7 +99,17 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
     const invalid = !result?.valid;
-    feedback.textContent = invalid ? (result?.message || window.PASSWORD_POLICY.messages.loading) : '';
+    if (invalid) {
+      feedback.replaceChildren();
+      const requirement = document.createElement('span');
+      requirement.textContent = result?.message || window.PASSWORD_POLICY.messages.loading;
+      const tip = document.createElement('span');
+      tip.className = 'password-policy-tip';
+      tip.textContent = 'Tente uma senha mais longa ou mais complexa.';
+      feedback.append(requirement, tip);
+    } else {
+      feedback.textContent = '';
+    }
     feedback.classList.toggle('is-invalid', invalid);
     passwordField?.setAttribute('aria-invalid', invalid ? 'true' : 'false');
   }

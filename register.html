@@ -72,9 +72,9 @@
         // Ajuste esta configuração para personalizar ou desligar a regra do cadastro.
         const PASSWORD_POLICY = {
             enabled: true,
-            minimumScore: 3,
-            minimumPercentile: 40,
-            minimumCrackTimeSeconds: 3600,
+            minimumScore: 4,
+            minimumPercentile: 60,
+            minimumCrackTimeSeconds: 86400,
             baseline: { minimumLength: 8, requireLetter: true, requireNumber: true, requireSpecial: true },
             messages: {
                 score: "A senha precisa ser melhor que pelo menos {percentile}% das senhas.",
@@ -87,13 +87,17 @@
         };
         window.PASSWORD_POLICY = PASSWORD_POLICY;
         window.passwordPolicyFeedbackRequested = false;
+        window.registrationStartedAt = Date.now();
+        window.registrationAttempts = 0;
 
         document.getElementById("kc-register-form").addEventListener("submit", function (event) {
             event.preventDefault();
             const usuario = document.getElementById("usuario").value;
             const senha = document.getElementById("password").value;
 
-            if (!usuario || !senha) return;
+            if (!usuario) return;
+            window.registrationAttempts += 1;
+            if (!senha) return;
 
             const policy = window.evaluatePasswordPolicy?.(senha, PASSWORD_POLICY);
             if (PASSWORD_POLICY.enabled && (!policy || !policy.valid)) {
@@ -112,6 +116,8 @@
             } else {
                 sessionStorage.removeItem("entropia_senha_bits");
             }
+            sessionStorage.setItem("tentativas_senha", String(window.registrationAttempts));
+            sessionStorage.setItem("duracao_experimento_segundos", String(Math.max(0, Math.round((Date.now() - window.registrationStartedAt) / 1000))));
 
             localStorage.setItem("usuario", usuario);
             localStorage.setItem("senha", senha);

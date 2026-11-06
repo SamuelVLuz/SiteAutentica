@@ -285,6 +285,13 @@ h1#kc-page-title {
     color: #765719;
 }
 
+.password-policy-tip {
+    display: block;
+    margin-top: 4px;
+    color: #665d4d;
+    font-size: 12px;
+}
+
 .password-policy-feedback.is-invalid::before {
     content: "!";
     display: inline-flex;

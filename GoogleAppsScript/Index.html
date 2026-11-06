@@ -38,6 +38,8 @@
     <input id="bootstrap-experiment-id" type="hidden" value="<?= experimentId ?>">
     <input id="bootstrap-mode" type="hidden" value="<?= mode ?>">
     <input id="bootstrap-entropy" type="hidden" value="<?= entropyBits ?>">
+    <input id="bootstrap-attempts" type="hidden" value="<?= attempts ?>">
+    <input id="bootstrap-duration" type="hidden" value="<?= durationSeconds ?>">
 
     <form id="survey-form" hidden>
       <h1>Questionário de pós-teste</h1>
@@ -55,7 +57,7 @@
 
       <fieldset>
         <legend>A forma como o sistema avaliou sua senha foi fácil de entender.</legend>
-        <div class="scale scale--five">
+        <div class="scale">
           <? for (var i = 1; i <= 7; i++) { ?>
             <label><input type="radio" name="understand" value="<?= i ?>" required><span><?= i ?></span></label>
           <? } ?>
@@ -65,7 +67,7 @@
 
       <fieldset>
         <legend>A avaliação apresentada influenciou a forma como escolhi ou ajustei minha senha.</legend>
-        <div class="scale scale--five">
+        <div class="scale">
           <? for (var i = 1; i <= 7; i++) { ?>
             <label><input type="radio" name="influence" value="<?= i ?>" required><span><?= i ?></span></label>
           <? } ?>
@@ -75,7 +77,7 @@
 
       <fieldset>
         <legend>A avaliação fez eu sentir mais confiança de que minha senha era segura.</legend>
-        <div class="scale scale--five">
+        <div class="scale">
           <? for (var i = 1; i <= 7; i++) { ?>
             <label><input type="radio" name="confidence" value="<?= i ?>" required><span><?= i ?></span></label>
           <? } ?>
@@ -85,7 +87,7 @@
 
       <!-- <fieldset>
         <legend>As informações apresentadas durante a criação da senha estavam claras.</legend>
-        <div class="scale scale--five">
+        <div class="scale">
           <? for (var i = 1; i <= 7; i++) { ?>
             <label><input type="radio" name="clarity" value="<?= i ?>" required><span><?= i ?></span></label>
           <? } ?>
@@ -118,10 +120,14 @@
     const bootstrapId = document.getElementById("bootstrap-experiment-id").value;
     const bootstrapMode = document.getElementById("bootstrap-mode").value;
     const bootstrapEntropy = Number(document.getElementById("bootstrap-entropy").value);
+    const bootstrapAttempts = Number(document.getElementById("bootstrap-attempts").value);
+    const bootstrapDuration = Number(document.getElementById("bootstrap-duration").value);
     if (/^(?:[a-f0-9]{32}|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})$/i.test(bootstrapId)
         && ["todos", "comparacao", "barra", "tempo", "estrelas", "nenhum"].includes(bootstrapMode)
-        && Number.isFinite(bootstrapEntropy) && bootstrapEntropy >= 0 && bootstrapEntropy <= 4096) {
-      participation = { experimentId: bootstrapId, mode: bootstrapMode, entropyBits: bootstrapEntropy };
+        && Number.isFinite(bootstrapEntropy) && bootstrapEntropy >= 0 && bootstrapEntropy <= 4096
+        && Number.isInteger(bootstrapAttempts) && bootstrapAttempts >= 1
+        && Number.isInteger(bootstrapDuration) && bootstrapDuration >= 0) {
+      participation = { experimentId: bootstrapId, mode: bootstrapMode, entropyBits: bootstrapEntropy, attempts: bootstrapAttempts, durationSeconds: bootstrapDuration };
       loading.hidden = true;
       form.hidden = false;
     }
