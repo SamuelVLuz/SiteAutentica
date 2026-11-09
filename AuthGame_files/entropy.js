@@ -213,12 +213,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getStrength(entropy) {
-    if (entropy < 28) return { label: 'Fraca', detail: 'um palpite bem treinado pode pegá-la.', score: 1, percent: 17, className: 'is-weak' };
-    if (entropy < 36) return { label: 'Básica', detail: 'já é alguma coisa, mas ainda dá para caprichar.', score: 2, percent: 34, className: 'is-basic' };
-    if (entropy < 60) return { label: 'Boa', detail: 'está no caminho certo.', score: 3, percent: 51, className: 'is-good' };
-    if (entropy < 80) return { label: 'Forte', detail: 'essa já dá trabalho de verdade.', score: 4, percent: 68, className: 'is-strong' };
-    if (entropy < 105) return { label: 'Excelente', detail: 'uma senha de respeito.', score: 5, percent: 84, className: 'is-excellent' };
-    return { label: 'Lendária', detail: 'nível chefe final: guarde-a em segurança.', score: 6, percent: 100, className: 'is-legendary' };
+    if (entropy < 28) return { label: 'Fraca', detail: 'Um palpite bem treinado pode pegá-la.', score: 1, percent: 17, className: 'is-weak' };
+    if (entropy < 36) return { label: 'Básica', detail: 'Já é alguma coisa, mas ainda dá para caprichar.', score: 2, percent: 34, className: 'is-basic' };
+    if (entropy < 60) return { label: 'Boa', detail: 'Está no caminho certo.', score: 3, percent: 51, className: 'is-good' };
+    if (entropy < 80) return { label: 'Forte', detail: 'Essa já dá trabalho de verdade.', score: 4, percent: 68, className: 'is-strong' };
+    if (entropy < 105) return { label: 'Excelente', detail: 'Uma senha de respeito!', score: 5, percent: 84, className: 'is-excellent' };
+    return { label: 'Lendária', detail: 'Nível chefe final: guarde-a em segurança.', score: 6, percent: 100, className: 'is-legendary' };
   }
 
   function getComparisonClass(percentile) {
@@ -264,14 +264,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getCrackTimeMessage(time) {
-    if (time.includes('centur')) return 'Séculos — levariam gerações inteiras para descobrir essa. Bravo!';
+    if (time.includes('centur')) return 'Séculos... levariam gerações inteiras para descobrir essa. Bravo!';
     const translated = translateTime(time);
     if (time.includes('year')) return `${translated}. Dá para envelhecer com tranquilidade esperando.`;
     if (time.includes('month')) return `${translated}. Tempo suficiente para muita coisa mudar.`;
-    if (time.includes('day')) return `${translated}. Já não pode sersubestimada.`;
-    if (time.includes('hour')) return `${translated}. Um café não vai ser suficiente para quebrá-la.`;
+    if (time.includes('day')) return `${translated}. Boa! Essa já não pode ser subestimada.`;
+    if (time.includes('hour')) return `${translated}. Um cafézinho não vai ser suficiente para quebrá-la.`;
     if (time.includes('minute')) return `${translated}. Uma dorzinha de cabeça, vamos reforçar MAIS!`;
-    return `${translated}. Essa foi rápida demais — em pouco tempo descobrem.`;
+    return `${translated}. Essa foi rápida demais, em pouco tempo descobrem.`;
   }
 
   function translateTime(time) {
