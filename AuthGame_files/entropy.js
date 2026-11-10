@@ -103,10 +103,13 @@ document.addEventListener('DOMContentLoaded', function () {
       feedback.replaceChildren();
       const requirement = document.createElement('span');
       requirement.textContent = result?.message || window.PASSWORD_POLICY.messages.loading;
-      const tip = document.createElement('span');
-      tip.className = 'password-policy-tip';
-      tip.textContent = 'Tente uma senha mais longa ou mais complexa.';
-      feedback.append(requirement, tip);
+      feedback.append(requirement);
+      if (new URLSearchParams(window.location.search).get('modo') !== 'nenhum') {
+        const tip = document.createElement('span');
+        tip.className = 'password-policy-tip';
+        tip.textContent = 'Tente uma senha mais longa ou mais complexa.';
+        feedback.append(tip);
+      }
     } else {
       feedback.textContent = '';
     }
