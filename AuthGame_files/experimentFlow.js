@@ -1,5 +1,6 @@
 (function () {
     const clarityProjectId = "yxsg4cdajs";
+    const randomModes = ["comparacao", "barra", "tempo", "estrelas", "nenhum"];
     const allowedModes = new Set(["comparacao", "barra", "tempo", "estrelas"]);
     const aliases = {
         comparacao: "comparacao", comparação: "comparacao", score: "comparacao",
@@ -11,7 +12,10 @@
     };
     const params = new URLSearchParams(window.location.search);
     const rawMode = (params.get("modo") || "").trim().toLocaleLowerCase("pt-BR");
-    const mode = rawMode ? (aliases[rawMode] || "nenhum") : "nenhum";
+    let mode = rawMode ? (aliases[rawMode] || "nenhum") : (sessionStorage.getItem("modo_experimento") || "");
+    if (!mode || mode === "todos") {
+        mode = rawMode ? "todos" : randomModes[Math.floor(Math.random() * randomModes.length)];
+    }
     const stage = document.documentElement.dataset.experimentStage || "experimento";
     const tracked = allowedModes.has(mode);
     const modeForStorage = mode;
@@ -82,7 +86,7 @@
 
     function flowUrl(path) {
         const url = new URL(path, window.location.href);
-        if (params.has("modo")) url.searchParams.set("modo", mode);
+        url.searchParams.set("modo", mode);
         return url.href;
     }
 
