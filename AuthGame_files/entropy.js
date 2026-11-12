@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (new URLSearchParams(window.location.search).get('modo') !== 'nenhum') {
         const tip = document.createElement('span');
         tip.className = 'password-policy-tip';
-        tip.textContent = 'Tente uma senha mais longa ou mais complexa.';
+        tip.textContent = 'Tente uma senha mais longa, ou use números e caracteres especiais.';
         feedback.append(tip);
       }
     } else {
